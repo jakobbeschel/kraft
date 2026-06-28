@@ -1,4 +1,4 @@
-// This is the workout logging page — where users record their sets, reps, weights, and runs
+export const dynamic = 'force-dynamic'
 
 'use client'
 
