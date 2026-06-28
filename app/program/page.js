@@ -226,8 +226,16 @@ export default function ProgramBuilder() {
             .update({ day_type: day.day_type })
             .eq('id', dayId)
 
-          // Delete old exercises and rebuild — simplest way to handle edits
-          await supabase.from('exercises').delete().eq('program_day_id', dayId)
+          // Delete movements first (they reference exercises), then exercises
+          const { data: existingExercises } = await supabase
+            .from('exercises')
+            .select('id')
+            .eq('program_day_id', dayId)
+          if (existingExercises && existingExercises.length > 0) {
+            const exIds = existingExercises.map(e => e.id)
+            await supabase.from('movements').delete().in('exercise_id', exIds)
+            await supabase.from('exercises').delete().eq('program_day_id', dayId)
+          }
 
         } else {
           // Insert new day
