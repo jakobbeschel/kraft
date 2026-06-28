@@ -1,12 +1,22 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '../lib/supabase'
 
-export default function LogWorkout() {
+export default function LogWorkoutPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+        <span className="text-zinc-500 text-sm">Loading...</span>
+      </main>
+    }>
+      <LogWorkout />
+    </Suspense>
+  )
+}
+
+function LogWorkout() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const dayId = searchParams.get('dayId')
@@ -188,11 +198,7 @@ export default function LogWorkout() {
   const includesRun = day && ['run', 'run+lift', 'run+opt'].includes(day.day_type)
   const includesLift = day && ['lift', 'run+lift', 'run+opt'].includes(day.day_type)
 
-  if (loading) return (
-    <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-      <span className="text-zinc-500 text-sm">Loading...</span>
-    </main>
-  )
+  if (loading) return null
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
