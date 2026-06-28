@@ -1,0 +1,278 @@
+// This is the dashboard — loads the user's program and shows their weekly training
+
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '../lib/supabase'
+
+const DAY_TYPE_LABELS = {
+  'rest':     'Rest day',
+  'lift':     'Lift only',
+  'run':      'Run only',
+  'run+lift': 'Run + Lift',
+  'run+opt':  'Run + optional Lift',
+}
+
+// Get the Monday of the current week + any offset (e.g. -1 = last week)
+function getMonday(offset = 0) {
+  const d = new Date()
+  const day = d.getDay()
+  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1) + offset * 7)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
+// Format a date as YYYY-MM-DD for database queries
+function toDateString(date) {
+  return date.toISOString().split('T')[0]
+}
+
+// Format a date nicely for display
+function formatDate(date) {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+export default function Dashboard() {
+  const [user, setUser] = useState(null)
+  const [days, setDays] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [hasProgram, setHasProgram] = useState(false)
+  const [weekOffset, setWeekOffset] = useState(0)
+  const [loggedDates, setLoggedDates] = useState([])
+  const router = useRouter()
+
+  useEffect(() => {
+    async function load() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { router.push('/login'); return }
+      setUser(session.user)
+
+      const { data: programs } = await supabase
+        .from('programs')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .limit(1)
+
+      if (!programs || programs.length === 0) {
+        setHasProgram(false)
+        setLoading(false)
+        return
+      }
+
+      setHasProgram(true)
+      const programId = programs[0].id
+
+      const { data: programDays } = await supabase
+        .from('program_days')
+        .select('id, day_name, day_type, order_index')
+        .eq('program_id', programId)
+        .order('order_index')
+
+      if (!programDays) { setLoading(false); return }
+
+      const daysWithExercises = await Promise.all(
+        programDays.map(async (day) => {
+          const { data: exercises } = await supabase
+            .from('exercises')
+            .select('id, name, is_complex, is_hold, order_index')
+            .eq('program_day_id', day.id)
+            .order('order_index')
+
+          const exercisesWithMovements = await Promise.all(
+            (exercises || []).map(async (ex) => {
+              const { data: movements } = await supabase
+                .from('movements')
+                .select('name, order_index')
+                .eq('exercise_id', ex.id)
+                .order('order_index')
+              return { ...ex, movements: movements || [] }
+            })
+          )
+
+          return { ...day, exercises: exercisesWithMovements }
+        })
+      )
+
+      setDays(daysWithExercises)
+      setLoading(false)
+    }
+
+    load()
+  }, [])
+
+  // Load logged workouts whenever the week changes
+  useEffect(() => {
+    async function loadLogs() {
+      if (!user) return
+
+      const monday = getMonday(weekOffset)
+      const saturday = new Date(monday)
+      saturday.setDate(saturday.getDate() + 5)
+
+      const { data: logs } = await supabase
+        .from('workout_logs')
+        .select('program_day_id, logged_date')
+        .eq('user_id', user.id)
+        .gte('logged_date', toDateString(monday))
+        .lte('logged_date', toDateString(saturday))
+
+      setLoggedDates(logs || [])
+    }
+
+    loadLogs()
+  }, [user, weekOffset])
+
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
+
+  // Check if a day has been logged this week
+  function isLogged(dayId) {
+    return loggedDates.some(l => l.program_day_id === dayId)
+  }
+
+  const monday = getMonday(weekOffset)
+  const saturday = new Date(monday)
+  saturday.setDate(saturday.getDate() + 5)
+
+  const weekLabel = weekOffset === 0
+    ? 'This week'
+    : weekOffset === -1
+    ? 'Last week'
+    : `${formatDate(monday)} – ${formatDate(saturday)}`
+
+  if (loading) return (
+    <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
+      <span className="text-zinc-500 text-sm">Loading your program...</span>
+    </main>
+  )
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white">
+
+      <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
+        <span className="text-xl font-semibold tracking-tight">Kraft</span>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-zinc-400">{user?.email}</span>
+          <button onClick={handleSignOut} className="text-sm text-zinc-400 hover:text-white transition-colors">
+            Sign out
+          </button>
+        </div>
+      </nav>
+
+      <div className="max-w-4xl mx-auto px-8 py-12">
+
+        {!hasProgram ? (
+          <div className="text-center py-24">
+            <h1 className="text-2xl font-semibold mb-3">Welcome to Kraft</h1>
+            <p className="text-zinc-400 text-sm mb-8">
+              You don't have a training program yet. Set one up to get started.
+            </p>
+            <button
+              onClick={() => router.push('/program')}
+              className="bg-white text-zinc-950 px-6 py-3 rounded-lg font-medium hover:bg-zinc-200 transition-colors"
+            >
+              Build my program
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* Header with week navigator */}
+            <div className="flex items-center justify-between mb-8">
+              <h1 className="text-2xl font-semibold">Your training</h1>
+              <button
+                onClick={() => router.push('/program')}
+                className="text-sm text-zinc-400 hover:text-white transition-colors"
+              >
+                Edit program
+              </button>
+            </div>
+
+            {/* Week navigation */}
+            <div className="flex items-center justify-between mb-6 bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-3">
+              <button
+                onClick={() => setWeekOffset(w => w - 1)}
+                className="text-zinc-400 hover:text-white transition-colors text-sm px-2"
+              >
+                ← Prev
+              </button>
+              <div className="text-center">
+                <span className="text-sm font-medium">{weekLabel}</span>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  {formatDate(monday)} – {formatDate(saturday)}
+                </p>
+              </div>
+              <button
+                onClick={() => setWeekOffset(w => Math.min(w + 1, 0))}
+                className={`text-sm px-2 transition-colors ${weekOffset === 0 ? 'text-zinc-700 cursor-default' : 'text-zinc-400 hover:text-white'}`}
+                disabled={weekOffset === 0}
+              >
+                Next →
+              </button>
+            </div>
+
+            {/* Training days */}
+            <div className="flex flex-col gap-4">
+              {days.map(day => (
+                <div
+                  key={day.id}
+                  className={`bg-zinc-900 border rounded-2xl px-6 py-5 ${isLogged(day.id) ? 'border-green-800' : 'border-zinc-800'}`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium">{day.day_name}</span>
+                      {/* Green dot if workout was logged this week */}
+                      {isLogged(day.id) && (
+                        <span className="text-xs bg-green-900 text-green-400 px-2 py-0.5 rounded-full">
+                          Logged
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs text-zinc-500 bg-zinc-800 px-3 py-1 rounded-full">
+                      {DAY_TYPE_LABELS[day.day_type] || day.day_type}
+                    </span>
+                  </div>
+
+                  {day.day_type === 'rest' && (
+                    <p className="text-zinc-600 text-sm">Rest - no training today</p>
+                  )}
+
+                  {day.day_type === 'run' && (
+                    <p className="text-zinc-500 text-sm">Running session</p>
+                  )}
+
+                  {day.exercises.length > 0 && (
+                    <div className="flex flex-col gap-2 mt-1">
+                      {day.exercises.map(ex => (
+                        <div key={ex.id} className="text-sm">
+                          <span className="text-zinc-300">{ex.name}</span>
+                          {ex.movements.length > 0 && (
+                            <span className="text-zinc-600 text-xs ml-2">
+                              {ex.movements.map(m => m.name).join(' → ')}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {day.day_type !== 'rest' && (
+                    <button
+                      onClick={() => router.push(`/log?dayId=${day.id}`)}
+                      className="mt-4 text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
+                    >
+                      {isLogged(day.id) ? 'Log again' : 'Log workout'}
+                    </button>
+                  )}
+
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </main>
+  )
+}
