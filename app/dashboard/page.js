@@ -107,15 +107,15 @@ export default function Dashboard() {
       if (!user) return
 
       const monday = getMonday(weekOffset)
-      const saturday = new Date(monday)
-      saturday.setDate(saturday.getDate() + 5)
+      const sunday = new Date(monday)
+      sunday.setDate(sunday.getDate() + 6)
 
       const { data: logs } = await supabase
         .from('workout_logs')
         .select('program_day_id, logged_date')
         .eq('user_id', user.id)
         .gte('logged_date', toDateString(monday))
-        .lte('logged_date', toDateString(saturday))
+        .lte('logged_date', toDateString(sunday))
 
       setLoggedDates(logs || [])
     }
@@ -134,14 +134,16 @@ export default function Dashboard() {
   }
 
   const monday = getMonday(weekOffset)
-  const saturday = new Date(monday)
-  saturday.setDate(saturday.getDate() + 5)
+  const sunday = new Date(monday)
+  sunday.setDate(sunday.getDate() + 6)
 
   const weekLabel = weekOffset === 0
     ? 'This week'
     : weekOffset === -1
     ? 'Last week'
-    : `${formatDate(monday)} – ${formatDate(saturday)}`
+    : weekOffset === 1
+    ? 'Next week'
+    : `${formatDate(monday)} – ${formatDate(sunday)}`
 
   if (loading) return (
     <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
@@ -201,13 +203,12 @@ export default function Dashboard() {
               <div className="text-center">
                 <span className="text-sm font-medium">{weekLabel}</span>
                 <p className="text-xs text-zinc-500 mt-0.5">
-                  {formatDate(monday)} – {formatDate(saturday)}
+                  {formatDate(monday)} – {formatDate(sunday)}
                 </p>
               </div>
               <button
-                onClick={() => setWeekOffset(w => Math.min(w + 1, 0))}
-                className={`text-sm px-2 transition-colors ${weekOffset === 0 ? 'text-zinc-700 cursor-default' : 'text-zinc-400 hover:text-white'}`}
-                disabled={weekOffset === 0}
+                onClick={() => setWeekOffset(w => w + 1)}
+                className="text-zinc-400 hover:text-white transition-colors text-sm px-2"
               >
                 Next →
               </button>
