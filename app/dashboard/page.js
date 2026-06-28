@@ -40,6 +40,8 @@ export default function Dashboard() {
   const [hasProgram, setHasProgram] = useState(false)
   const [weekOffset, setWeekOffset] = useState(0)
   const [loggedDates, setLoggedDates] = useState([])
+  const [expandedLog, setExpandedLog] = useState(null)
+  const [logHistory, setLogHistory] = useState({})
   const router = useRouter()
 
   useEffect(() => {
@@ -144,6 +146,30 @@ export default function Dashboard() {
     await supabase.from('logged_runs').delete().eq('workout_log_id', logId)
     await supabase.from('workout_logs').delete().eq('id', logId)
     setLoggedDates(prev => prev.filter(l => l.program_day_id !== dayId))
+    setExpandedLog(null)
+    setLogHistory(prev => { const n = {...prev}; delete n[dayId]; return n })
+  }
+
+  async function toggleHistory(dayId) {
+    if (expandedLog === dayId) { setExpandedLog(null); return }
+    setExpandedLog(dayId)
+    if (logHistory[dayId]) return
+
+    const logId = getLogId(dayId)
+    if (!logId) return
+
+    const [{ data: sets }, { data: runs }] = await Promise.all([
+      supabase.from('logged_sets')
+        .select('set_number, reps, weight, notes, exercise_id, exercises(name)')
+        .eq('workout_log_id', logId)
+        .order('exercise_id')
+        .order('set_number'),
+      supabase.from('logged_runs')
+        .select('run_type, duration, distance, pace, incline, notes')
+        .eq('workout_log_id', logId)
+    ])
+
+    setLogHistory(prev => ({ ...prev, [dayId]: { sets: sets || [], runs: runs || [] } }))
   }
 
   const monday = getMonday(weekOffset)
@@ -239,9 +265,12 @@ export default function Dashboard() {
                       <span className="font-medium">{day.day_name}</span>
                       {/* Green dot if workout was logged this week */}
                       {isLogged(day.id) && (
-                        <span className="text-xs bg-green-900 text-green-400 px-2 py-0.5 rounded-full">
-                          Logged
-                        </span>
+                        <button
+                          onClick={() => toggleHistory(day.id)}
+                          className="text-xs bg-green-900 text-green-400 px-2 py-0.5 rounded-full hover:bg-green-800 transition-colors"
+                        >
+                          Logged {expandedLog === day.id ? '▲' : '▼'}
+                        </button>
                       )}
                     </div>
                     <span className="text-xs text-zinc-500 bg-zinc-800 px-3 py-1 rounded-full">
@@ -269,6 +298,49 @@ export default function Dashboard() {
                           )}
                         </div>
                       ))}
+                    </div>
+                  )}
+
+                  {expandedLog === day.id && logHistory[day.id] && (
+                    <div className="mt-4 pt-4 border-t border-zinc-800">
+                      {logHistory[day.id].runs.map((run, i) => (
+                        <div key={i} className="mb-3 text-sm text-zinc-400">
+                          <span className="text-zinc-300 font-medium">{run.run_type} run</span>
+                          <div className="flex flex-wrap gap-4 mt-1 text-xs text-zinc-500">
+                            {run.duration && <span>Duration: {run.duration}</span>}
+                            {run.distance && <span>Distance: {run.distance}</span>}
+                            {run.pace && <span>Pace: {run.pace}</span>}
+                            {run.incline && <span>Incline: {run.incline}</span>}
+                            {run.notes && <span>Notes: {run.notes}</span>}
+                          </div>
+                        </div>
+                      ))}
+                      {(() => {
+                        const byExercise = {}
+                        logHistory[day.id].sets.forEach(s => {
+                          const name = s.exercises?.name || 'Unknown'
+                          if (!byExercise[name]) byExercise[name] = []
+                          byExercise[name].push(s)
+                        })
+                        return Object.entries(byExercise).map(([name, sets]) => (
+                          <div key={name} className="mb-3">
+                            <span className="text-sm text-zinc-300 font-medium">{name}</span>
+                            <div className="mt-1 flex flex-col gap-1">
+                              {sets.map((s, i) => (
+                                <div key={i} className="text-xs text-zinc-500 flex gap-4">
+                                  <span>Set {s.set_number}</span>
+                                  {s.reps && <span>{s.reps} reps</span>}
+                                  {s.weight && <span>{s.weight}</span>}
+                                  {s.notes && <span>{s.notes}</span>}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ))
+                      })()}
+                      {logHistory[day.id].sets.length === 0 && logHistory[day.id].runs.length === 0 && (
+                        <p className="text-xs text-zinc-600">No details recorded.</p>
+                      )}
                     </div>
                   )}
 
