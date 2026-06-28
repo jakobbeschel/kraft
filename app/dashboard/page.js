@@ -112,7 +112,7 @@ export default function Dashboard() {
 
       const { data: logs } = await supabase
         .from('workout_logs')
-        .select('program_day_id, logged_date')
+        .select('id, program_day_id, logged_date')
         .eq('user_id', user.id)
         .gte('logged_date', toDateString(monday))
         .lte('logged_date', toDateString(sunday))
@@ -128,9 +128,22 @@ export default function Dashboard() {
     router.push('/login')
   }
 
-  // Check if a day has been logged this week
   function isLogged(dayId) {
     return loggedDates.some(l => l.program_day_id === dayId)
+  }
+
+  function getLogId(dayId) {
+    return loggedDates.find(l => l.program_day_id === dayId)?.id
+  }
+
+  async function deleteLog(dayId) {
+    const logId = getLogId(dayId)
+    if (!logId) return
+    if (!confirm('Delete this workout log?')) return
+    await supabase.from('logged_sets').delete().eq('workout_log_id', logId)
+    await supabase.from('logged_runs').delete().eq('workout_log_id', logId)
+    await supabase.from('workout_logs').delete().eq('id', logId)
+    setLoggedDates(prev => prev.filter(l => l.program_day_id !== dayId))
   }
 
   const monday = getMonday(weekOffset)
@@ -260,12 +273,22 @@ export default function Dashboard() {
                   )}
 
                   {day.day_type !== 'rest' && (
-                    <button
-                      onClick={() => router.push(`/log?dayId=${day.id}`)}
-                      className="mt-4 text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
-                    >
-                      {isLogged(day.id) ? 'Log again' : 'Log workout'}
-                    </button>
+                    <div className="flex items-center gap-3 mt-4">
+                      <button
+                        onClick={() => router.push(`/log?dayId=${day.id}`)}
+                        className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
+                      >
+                        {isLogged(day.id) ? 'Log again' : 'Log workout'}
+                      </button>
+                      {isLogged(day.id) && (
+                        <button
+                          onClick={() => deleteLog(day.id)}
+                          className="text-xs text-red-800 hover:text-red-400 transition-colors"
+                        >
+                          Delete log
+                        </button>
+                      )}
+                    </div>
                   )}
 
                 </div>
