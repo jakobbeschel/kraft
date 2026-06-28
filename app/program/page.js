@@ -93,7 +93,15 @@ export default function ProgramBuilder() {
             })
           )
 
-          setDays(daysWithExercises)
+          // Merge loaded days into the full 7-day template so new days (e.g. Sunday) appear
+          const loadedMap = {}
+          daysWithExercises.forEach(d => { loadedMap[d.day_name] = d })
+          setDays(DAYS.map((name, index) => loadedMap[name] || {
+            day_name: name,
+            day_type: 'rest',
+            order_index: index,
+            exercises: [],
+          }))
         }
       }
 
