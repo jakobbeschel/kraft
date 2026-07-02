@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '../lib/supabase'
+import Nav from '../components/Nav'
 
 export default function LogWorkoutPage() {
   return (
@@ -203,16 +204,7 @@ function LogWorkout() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      {/* Navigation */}
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
-        <button onClick={() => router.push('/')} className="text-xl font-semibold tracking-tight hover:text-zinc-300 transition-colors">Kraft</button>
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="text-sm text-zinc-400 hover:text-white transition-colors"
-        >
-          ← Back to dashboard
-        </button>
-      </nav>
+      <Nav current="Log workout" />
 
       <div className="max-w-3xl mx-auto px-8 py-12">
         <h1 className="text-2xl font-semibold mb-1">{day.day_name}</h1>

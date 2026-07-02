@@ -1,11 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { supabase } from './lib/supabase'
+import Nav from './components/Nav'
 
 export default function Home() {
-  const router = useRouter()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -18,40 +17,10 @@ export default function Home() {
     checkSession()
   }, [])
 
-  async function handleSignOut() {
-    await supabase.auth.signOut()
-    setUser(null)
-  }
-
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
-        <a href="/" className="text-xl font-semibold tracking-tight hover:text-zinc-300 transition-colors">Kraft</a>
-        <div className="flex items-center gap-4">
-          {!loading && (
-            user ? (
-              <>
-                <a href="/dashboard" className="text-sm text-zinc-400 hover:text-white transition-colors">Dashboard</a>
-                <a href="/library" className="text-sm text-zinc-400 hover:text-white transition-colors">Library</a>
-                <a href="/program" className="text-sm text-zinc-400 hover:text-white transition-colors">Program</a>
-                <span className="text-sm text-zinc-600">|</span>
-                <span className="text-sm text-zinc-500">{user.email}</span>
-                <button onClick={handleSignOut} className="text-sm text-zinc-400 hover:text-white transition-colors">
-                  Sign out
-                </button>
-              </>
-            ) : (
-              <>
-                <a href="/login" className="text-sm text-zinc-400 hover:text-white transition-colors">Log in</a>
-                <a href="/signup" className="text-sm bg-white text-zinc-950 px-4 py-2 rounded-lg hover:bg-zinc-200 transition-colors font-medium">
-                  Get started
-                </a>
-              </>
-            )
-          )}
-        </div>
-      </nav>
+      <Nav current="Home" />
 
       <section className="flex flex-col items-center justify-center text-center px-6 py-32">
         <span className="text-sm text-zinc-500 uppercase tracking-widest mb-6">

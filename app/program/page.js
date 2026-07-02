@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../lib/supabase'
+import Nav from '../components/Nav'
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -312,15 +313,7 @@ export default function ProgramBuilder() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
-        <button onClick={() => router.push('/')} className="text-xl font-semibold tracking-tight hover:text-zinc-300 transition-colors">Kraft</button>
-        <button
-          onClick={() => router.push('/dashboard')}
-          className="text-sm text-zinc-400 hover:text-white transition-colors"
-        >
-          ← Back to dashboard
-        </button>
-      </nav>
+      <Nav current="Program" />
 
       <div className="max-w-3xl mx-auto px-8 py-12">
         <h1 className="text-2xl font-semibold mb-2">

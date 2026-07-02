@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../lib/supabase'
+import Nav from '../components/Nav'
 
 const DAY_TYPE_LABELS = {
   'rest':     'Rest day',
@@ -193,18 +194,7 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
-        <button onClick={() => router.push('/')} className="text-xl font-semibold tracking-tight hover:text-zinc-300 transition-colors">Kraft</button>
-        <div className="flex items-center gap-4">
-          <button onClick={() => router.push('/library')} className="text-sm text-zinc-400 hover:text-white transition-colors">
-            Library
-          </button>
-          <span className="text-sm text-zinc-400">{user?.email}</span>
-          <button onClick={handleSignOut} className="text-sm text-zinc-400 hover:text-white transition-colors">
-            Sign out
-          </button>
-        </div>
-      </nav>
+      <Nav current="Dashboard" />
 
       <div className="max-w-4xl mx-auto px-8 py-12">
 
