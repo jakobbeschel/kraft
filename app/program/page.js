@@ -313,7 +313,7 @@ export default function ProgramBuilder() {
     <main className="min-h-screen bg-zinc-950 text-white">
 
       <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
-        <span className="text-xl font-semibold tracking-tight">Kraft</span>
+        <button onClick={() => router.push('/')} className="text-xl font-semibold tracking-tight hover:text-zinc-300 transition-colors">Kraft</button>
         <button
           onClick={() => router.push('/dashboard')}
           className="text-sm text-zinc-400 hover:text-white transition-colors"
