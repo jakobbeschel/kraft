@@ -35,13 +35,7 @@ export default function Progress() {
       if (!session) { router.push('/login'); return }
       setUser(session.user)
 
-      // Load all unique exercises the user has logged sets for
-      const { data: sets } = await supabase
-        .from('logged_sets')
-        .select('exercise_id, exercises(id, name)')
-        .eq('exercises.program_day_id', null)
-
-      // Better: get exercises from logged_sets joined to workout_logs for this user
+      // Get all workout logs for this user
       const { data: logs } = await supabase
         .from('workout_logs')
         .select('id')
@@ -51,6 +45,7 @@ export default function Progress() {
 
       const logIds = logs.map(l => l.id)
 
+      // Get all logged sets with exercise names
       const { data: loggedSets } = await supabase
         .from('logged_sets')
         .select('exercise_id, exercises(name)')
