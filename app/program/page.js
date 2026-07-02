@@ -24,6 +24,8 @@ export default function ProgramBuilder() {
   const [error, setError] = useState(null)
   const [existingProgramId, setExistingProgramId] = useState(null)
   const [existingDayIds, setExistingDayIds] = useState({})
+  const [library, setLibrary] = useState([])
+  const [pickerOpen, setPickerOpen] = useState(null) // { dayIndex, exIndex }
 
   const [days, setDays] = useState(
     DAYS.map((name, index) => ({
@@ -105,6 +107,13 @@ export default function ProgramBuilder() {
         }
       }
 
+      const { data: libraryData } = await supabase
+        .from('movement_library')
+        .select('id, name, category, description')
+        .order('category')
+        .order('name')
+      setLibrary(libraryData || [])
+
       setLoading(false)
     }
 
@@ -115,6 +124,11 @@ export default function ProgramBuilder() {
     setDays(prev => prev.map((day, i) =>
       i === index ? { ...day, day_type: type } : day
     ))
+  }
+
+  function pickFromLibrary(dayIndex, exIndex, movement) {
+    updateExercise(dayIndex, exIndex, 'name', movement.name)
+    setPickerOpen(null)
   }
 
   function addExercise(dayIndex) {
@@ -347,7 +361,7 @@ export default function ProgramBuilder() {
                   {day.exercises.map((ex, exIndex) => (
                     <div key={exIndex} className="bg-zinc-800 rounded-xl p-4">
 
-                      <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center gap-2 mb-2">
                         <input
                           type="text"
                           placeholder="Exercise name (e.g. KB Goblet Squat)"
@@ -361,6 +375,40 @@ export default function ProgramBuilder() {
                         >
                           ✕
                         </button>
+                      </div>
+
+                      <div className="relative mb-3">
+                        <button
+                          onClick={() => setPickerOpen(pickerOpen?.dayIndex === dayIndex && pickerOpen?.exIndex === exIndex ? null : { dayIndex, exIndex })}
+                          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+                        >
+                          Choose from library ▾
+                        </button>
+                        {pickerOpen?.dayIndex === dayIndex && pickerOpen?.exIndex === exIndex && (
+                          <div className="absolute left-0 top-6 z-10 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl w-72 max-h-64 overflow-y-auto">
+                            {['complex', 'single'].map(cat => {
+                              const items = library.filter(m => m.category === cat)
+                              if (items.length === 0) return null
+                              return (
+                                <div key={cat}>
+                                  <div className="px-3 py-2 text-xs text-zinc-500 uppercase tracking-wider border-b border-zinc-700">
+                                    {cat === 'complex' ? 'Complexes' : 'Single movements'}
+                                  </div>
+                                  {items.map(m => (
+                                    <button
+                                      key={m.id}
+                                      onClick={() => pickFromLibrary(dayIndex, exIndex, m)}
+                                      className="w-full text-left px-3 py-2.5 text-sm hover:bg-zinc-700 transition-colors"
+                                    >
+                                      <span className="text-zinc-200">{m.name}</span>
+                                      {m.description && <p className="text-zinc-500 text-xs mt-0.5 truncate">{m.description}</p>}
+                                    </button>
+                                  ))}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-4 mb-3">
