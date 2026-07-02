@@ -196,6 +196,9 @@ export default function Dashboard() {
       <nav className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
         <span className="text-xl font-semibold tracking-tight">Kraft</span>
         <div className="flex items-center gap-4">
+          <button onClick={() => router.push('/library')} className="text-sm text-zinc-400 hover:text-white transition-colors">
+            Library
+          </button>
           <span className="text-sm text-zinc-400">{user?.email}</span>
           <button onClick={handleSignOut} className="text-sm text-zinc-400 hover:text-white transition-colors">
             Sign out
