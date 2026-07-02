@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase'
 const PAGES = [
   { label: 'Home', href: '/' },
   { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Progress', href: '/progress' },
   { label: 'Library', href: '/library' },
   { label: 'Program', href: '/program' },
 ]
