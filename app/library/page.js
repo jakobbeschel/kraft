@@ -14,6 +14,10 @@ export default function Library() {
   const [newCategory, setNewCategory] = useState('single')
   const [newDescription, setNewDescription] = useState('')
   const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [editName, setEditName] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editCategory, setEditCategory] = useState('single')
 
   useEffect(() => {
     async function load() {
@@ -48,6 +52,35 @@ export default function Library() {
       setShowAdd(false)
     }
     setSaving(false)
+  }
+
+  function startEdit(m) {
+    setEditingId(m.id)
+    setEditName(m.name)
+    setEditDescription(m.description || '')
+    setEditCategory(m.category)
+  }
+
+  async function saveEdit() {
+    setSaving(true)
+    const { error } = await supabase
+      .from('movement_library')
+      .update({ name: editName.trim(), category: editCategory, description: editDescription.trim() || null })
+      .eq('id', editingId)
+    if (!error) {
+      setMovements(prev => prev.map(m => m.id === editingId
+        ? { ...m, name: editName.trim(), category: editCategory, description: editDescription.trim() || null }
+        : m
+      ))
+      setEditingId(null)
+    }
+    setSaving(false)
+  }
+
+  async function deleteMovement(id) {
+    if (!confirm('Delete this movement?')) return
+    await supabase.from('movement_library').delete().eq('id', id)
+    setMovements(prev => prev.filter(m => m.id !== id))
   }
 
   const filtered = activeCategory === 'all'
@@ -154,10 +187,7 @@ export default function Library() {
             <h2 className="text-xs text-zinc-500 uppercase tracking-widest mb-4">Complexes</h2>
             <div className="flex flex-col gap-3">
               {complexes.map(m => (
-                <div key={m.id} className="bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-4">
-                  <span className="font-medium text-sm">{m.name}</span>
-                  {m.description && <p className="text-zinc-500 text-xs mt-1">{m.description}</p>}
-                </div>
+                <MovementCard key={m.id} m={m} editingId={editingId} editName={editName} editDescription={editDescription} editCategory={editCategory} setEditName={setEditName} setEditDescription={setEditDescription} setEditCategory={setEditCategory} startEdit={startEdit} saveEdit={saveEdit} deleteMovement={deleteMovement} setEditingId={setEditingId} saving={saving} />
               ))}
             </div>
           </div>
@@ -168,10 +198,7 @@ export default function Library() {
             <h2 className="text-xs text-zinc-500 uppercase tracking-widest mb-4">Single movements</h2>
             <div className="flex flex-col gap-3">
               {singles.map(m => (
-                <div key={m.id} className="bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-4">
-                  <span className="font-medium text-sm">{m.name}</span>
-                  {m.description && <p className="text-zinc-500 text-xs mt-1">{m.description}</p>}
-                </div>
+                <MovementCard key={m.id} m={m} editingId={editingId} editName={editName} editDescription={editDescription} editCategory={editCategory} setEditName={setEditName} setEditDescription={setEditDescription} setEditCategory={setEditCategory} startEdit={startEdit} saveEdit={saveEdit} deleteMovement={deleteMovement} setEditingId={setEditingId} saving={saving} />
               ))}
             </div>
           </div>
@@ -182,5 +209,58 @@ export default function Library() {
         )}
       </div>
     </main>
+  )
+}
+
+function MovementCard({ m, editingId, editName, editDescription, editCategory, setEditName, setEditDescription, setEditCategory, startEdit, saveEdit, deleteMovement, setEditingId, saving }) {
+  const isEditing = editingId === m.id
+
+  if (isEditing) {
+    return (
+      <div className="bg-zinc-900 border border-zinc-700 rounded-xl px-5 py-4 flex flex-col gap-3">
+        <input
+          type="text"
+          value={editName}
+          onChange={e => setEditName(e.target.value)}
+          className="bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-zinc-400"
+        />
+        <select
+          value={editCategory}
+          onChange={e => setEditCategory(e.target.value)}
+          className="bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm outline-none"
+        >
+          <option value="single">Single movement</option>
+          <option value="complex">Complex</option>
+        </select>
+        <textarea
+          value={editDescription}
+          onChange={e => setEditDescription(e.target.value)}
+          placeholder="Description (optional)"
+          rows={2}
+          className="bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-sm outline-none resize-none"
+        />
+        <div className="flex gap-3">
+          <button onClick={saveEdit} disabled={saving} className="text-sm bg-white text-zinc-950 px-4 py-1.5 rounded-lg font-medium hover:bg-zinc-200 disabled:opacity-50">
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+          <button onClick={() => setEditingId(null)} className="text-sm text-zinc-500 hover:text-white transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-4 flex items-start justify-between group">
+      <div>
+        <span className="font-medium text-sm">{m.name}</span>
+        {m.description && <p className="text-zinc-500 text-xs mt-1">{m.description}</p>}
+      </div>
+      <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity ml-4 shrink-0">
+        <button onClick={() => startEdit(m)} className="text-xs text-zinc-400 hover:text-white transition-colors">Edit</button>
+        <button onClick={() => deleteMovement(m.id)} className="text-xs text-red-800 hover:text-red-400 transition-colors">Delete</button>
+      </div>
+    </div>
   )
 }
