@@ -128,7 +128,15 @@ export default function ProgramBuilder() {
   }
 
   function pickFromLibrary(dayIndex, exIndex, movement) {
-    updateExercise(dayIndex, exIndex, 'name', movement.name)
+    setDays(prev => prev.map((day, i) => {
+      if (i !== dayIndex) return day
+      return {
+        ...day,
+        exercises: day.exercises.map((ex, ei) =>
+          ei !== exIndex ? ex : { ...ex, name: movement.name, library_id: movement.id }
+        )
+      }
+    }))
     setPickerOpen(null)
   }
 
@@ -279,6 +287,7 @@ export default function ProgramBuilder() {
               is_complex: ex.is_complex,
               is_hold: ex.is_hold,
               order_index: ex.order_index,
+              library_id: ex.library_id || null,
             })
             .select()
             .single()

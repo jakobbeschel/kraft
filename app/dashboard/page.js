@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [loggedDates, setLoggedDates] = useState([])
   const [expandedLog, setExpandedLog] = useState(null)
   const [logHistory, setLogHistory] = useState({})
+  const [infoPopup, setInfoPopup] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -78,7 +79,7 @@ export default function Dashboard() {
         programDays.map(async (day) => {
           const { data: exercises } = await supabase
             .from('exercises')
-            .select('id, name, is_complex, is_hold, order_index')
+            .select('id, name, is_complex, is_hold, order_index, library_id, movement_library(description)')
             .eq('program_day_id', day.id)
             .order('order_index')
 
@@ -89,7 +90,7 @@ export default function Dashboard() {
                 .select('name, order_index')
                 .eq('exercise_id', ex.id)
                 .order('order_index')
-              return { ...ex, movements: movements || [] }
+              return { ...ex, movements: movements || [], description: ex.movement_library?.description || null }
             })
           )
 
@@ -283,9 +284,25 @@ export default function Dashboard() {
                     <div className="flex flex-col gap-2 mt-1">
                       {day.exercises.map(ex => (
                         <div key={ex.id} className="text-sm">
-                          <span className="text-zinc-300">{ex.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-zinc-300">{ex.name}</span>
+                            {ex.description && (
+                              <button
+                                onClick={() => setInfoPopup(infoPopup?.id === ex.id ? null : { id: ex.id, name: ex.name, description: ex.description })}
+                                className="text-zinc-600 hover:text-zinc-300 transition-colors text-xs leading-none"
+                                title="View description"
+                              >
+                                ⓘ
+                              </button>
+                            )}
+                          </div>
+                          {infoPopup?.id === ex.id && (
+                            <div className="mt-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-zinc-400 leading-relaxed">
+                              {infoPopup.description}
+                            </div>
+                          )}
                           {ex.movements.length > 0 && (
-                            <span className="text-zinc-600 text-xs ml-2">
+                            <span className="text-zinc-600 text-xs ml-0">
                               {ex.movements.map(m => m.name).join(' → ')}
                             </span>
                           )}
