@@ -4,6 +4,86 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import Nav from './components/Nav'
 
+function IconComplex() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="6" cy="14" r="3" stroke="#a1a1aa" strokeWidth="1.5"/>
+      <circle cx="22" cy="14" r="3" stroke="#a1a1aa" strokeWidth="1.5"/>
+      <rect x="9" y="12.5" width="10" height="3" rx="1.5" stroke="#a1a1aa" strokeWidth="1.5"/>
+      <path d="M3 14H1M27 14H25" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function IconRun() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="17" cy="5" r="2" stroke="#a1a1aa" strokeWidth="1.5"/>
+      <path d="M13 9l4-2 3 4-4 2" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M10 24l3-6 4 2 3-5" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M7 16l4-3 2 3" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function IconLibrary() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="6" width="6" height="16" rx="1" stroke="#a1a1aa" strokeWidth="1.5"/>
+      <rect x="12" y="6" width="6" height="16" rx="1" stroke="#a1a1aa" strokeWidth="1.5"/>
+      <path d="M20 7l3.5 15" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function IconProgress() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 22l6-7 5 4 9-12" stroke="#a1a1aa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function KettlebellSilhouette({ className }) {
+  return (
+    <svg viewBox="0 0 120 160" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <circle cx="60" cy="45" r="30" />
+      <path d="M44 42 Q40 55 35 65 Q28 80 28 100 Q28 130 60 130 Q92 130 92 100 Q92 80 85 65 Q80 55 76 42 Z" />
+      <rect x="50" y="10" width="20" height="10" rx="5" />
+      <path d="M45 18 Q60 8 75 18" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function PullupSilhouette({ className }) {
+  return (
+    <svg viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <line x1="10" y1="10" x2="90" y2="10" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+      <circle cx="50" cy="38" r="12" />
+      <path d="M50 50 L50 100" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+      <path d="M50 60 L25 30" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M50 60 L75 30" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M50 100 L30 140" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M50 100 L70 140" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function HandstandSilhouette({ className }) {
+  return (
+    <svg viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <circle cx="50" cy="145" r="12" />
+      <path d="M50 133 L50 85" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
+      <path d="M50 115 L25 95" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M50 115 L75 95" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M50 85 L30 45" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M50 85 L70 45" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+      <path d="M30 45 L20 170" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
+      <path d="M70 45 L80 170" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 export default function Home() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -23,17 +103,24 @@ export default function Home() {
       <Nav current="Home" />
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center text-center px-6 pt-28 pb-24">
-        <span className="text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
+      <section className="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 overflow-hidden">
+
+        {/* Silhouettes */}
+        <KettlebellSilhouette className="absolute left-[5%] top-8 w-32 text-zinc-800 opacity-60 rotate-[-12deg]" />
+        <KettlebellSilhouette className="absolute right-[8%] bottom-4 w-20 text-zinc-800 opacity-40 rotate-[10deg]" />
+        <PullupSilhouette className="absolute right-[14%] top-6 w-24 text-zinc-800 opacity-40" />
+        <HandstandSilhouette className="absolute left-[12%] bottom-0 w-20 text-zinc-800 opacity-30" />
+
+        <span className="relative text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
           Built for functional fitness
         </span>
-        <h1 className="text-6xl font-bold tracking-tight max-w-2xl leading-[1.1] mb-6">
+        <h1 className="relative text-6xl font-bold tracking-tight max-w-2xl leading-[1.1] mb-6">
           Train with purpose.<br />Track with precision.
         </h1>
-        <p className="text-zinc-400 text-lg max-w-lg mb-10 leading-relaxed">
+        <p className="relative text-zinc-400 text-lg max-w-lg mb-10 leading-relaxed">
           Kraft is a training tracker built for kettlebell athletes and calisthenics practitioners. No fluff, no barbell bias.
         </p>
-        <div className="flex items-center gap-4">
+        <div className="relative flex items-center gap-4">
           {!loading && (
             user ? (
               <a href="/dashboard" className="bg-white text-zinc-900 px-7 py-3.5 rounded-xl font-semibold hover:bg-zinc-100 transition-colors">
@@ -63,7 +150,6 @@ export default function Home() {
         <span className="block text-xs text-zinc-500 uppercase tracking-[0.2em] text-center mb-4">How it works</span>
         <h2 className="text-2xl font-semibold text-center mb-16">From program to logged in minutes</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
           <div className="flex flex-col">
             <span className="text-4xl font-bold text-zinc-700 mb-4">01</span>
             <h3 className="font-semibold mb-2">Build your program</h3>
@@ -71,7 +157,6 @@ export default function Home() {
               Set up your weekly training split. Choose day types, add exercises, and pull movements straight from the library.
             </p>
           </div>
-
           <div className="flex flex-col">
             <span className="text-4xl font-bold text-zinc-700 mb-4">02</span>
             <h3 className="font-semibold mb-2">Log each session</h3>
@@ -79,7 +164,6 @@ export default function Home() {
               Record sets, reps, and weight for lifts. Log pace, distance, and interval splits for runs. All in one place.
             </p>
           </div>
-
           <div className="flex flex-col">
             <span className="text-4xl font-bold text-zinc-700 mb-4">03</span>
             <h3 className="font-semibold mb-2">Track your progress</h3>
@@ -87,7 +171,6 @@ export default function Home() {
               See what you lifted last week. Review past sessions directly from your dashboard. Know exactly where you stand.
             </p>
           </div>
-
         </div>
       </section>
 
@@ -100,10 +183,10 @@ export default function Home() {
       <section id="features" className="px-8 py-24 max-w-5xl mx-auto">
         <span className="block text-xs text-zinc-500 uppercase tracking-[0.2em] text-center mb-4">Features</span>
         <h2 className="text-2xl font-semibold text-center mb-16">Everything your training needs</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
           <div className="bg-zinc-800 rounded-2xl p-6 border border-zinc-700">
-            <div className="text-2xl mb-4">🔗</div>
+            <div className="mb-4"><IconComplex /></div>
             <h3 className="font-semibold mb-2">Complex tracking</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
               Log multi-movement sequences as a single rep. Built for the way kettlebell training actually works.
@@ -111,18 +194,26 @@ export default function Home() {
           </div>
 
           <div className="bg-zinc-800 rounded-2xl p-6 border border-zinc-700">
-            <div className="text-2xl mb-4">🏃</div>
+            <div className="mb-4"><IconRun /></div>
             <h3 className="font-semibold mb-2">Run + lift days</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
-              Track runs and strength in the same session. Log pace, distance, intervals, and weights all in one place.
+              Track runs and lifts in the same session. Log pace, distance, intervals, and weights all in one place.
             </p>
           </div>
 
           <div className="bg-zinc-800 rounded-2xl p-6 border border-zinc-700">
-            <div className="text-2xl mb-4">📚</div>
+            <div className="mb-4"><IconLibrary /></div>
             <h3 className="font-semibold mb-2">Movement library</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
-              Browse kettlebell and calisthenics movements with descriptions. Pick directly from the library when building your program.
+              Browse kettlebell and calisthenics movements with descriptions. Pick directly when building your program.
+            </p>
+          </div>
+
+          <div className="bg-zinc-800 rounded-2xl p-6 border border-zinc-700">
+            <div className="mb-4"><IconProgress /></div>
+            <h3 className="font-semibold mb-2">Progress tracking</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              See your weights and volume trend over 1, 3, 6, or 12 months. Know exactly how far you've come.
             </p>
           </div>
 
@@ -134,7 +225,7 @@ export default function Home() {
         <div className="border-t border-zinc-800" />
       </div>
 
-      {/* Quote / pull section */}
+      {/* Quote */}
       <section className="px-8 py-24 max-w-3xl mx-auto text-center">
         <p className="text-2xl font-medium text-zinc-300 leading-relaxed mb-6">
           "Most fitness apps are built for gym-goers with barbells. Kraft is built for people who train differently."
