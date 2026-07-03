@@ -326,9 +326,20 @@ export default function ProgramBuilder() {
       <Nav current="Program" />
 
       <div className="max-w-3xl mx-auto px-8 py-12">
-        <h1 className="text-2xl font-semibold mb-2">
-          {existingProgramId ? 'Edit your program' : 'Build your program'}
-        </h1>
+        <div className="flex items-start justify-between mb-2">
+          <h1 className="text-2xl font-semibold">
+            {existingProgramId ? 'Edit your program' : 'Build your program'}
+          </h1>
+          {existingProgramId && (
+            <button
+              onClick={saveProgram}
+              disabled={saving}
+              className="text-sm bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 rounded-lg px-4 py-2 transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save changes'}
+            </button>
+          )}
+        </div>
         <p className="text-zinc-400 text-sm mb-10">
           {existingProgramId
             ? 'Make changes to your weekly training plan below.'
