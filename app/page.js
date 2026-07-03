@@ -4,26 +4,46 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import Nav from './components/Nav'
 
-function KettlebellSilhouette() {
+function KettlebellOutline() {
   return (
-    <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <circle cx="60" cy="55" r="38" stroke="#3f3f46" strokeWidth="2.5"/>
-      <rect x="44" y="88" width="32" height="22" rx="4" stroke="#3f3f46" strokeWidth="2.5"/>
-      <rect x="30" y="108" width="60" height="72" rx="12" stroke="#3f3f46" strokeWidth="2.5"/>
+    <svg viewBox="0 0 100 140" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      {/* Handle arc */}
+      <path d="M34 52 Q34 20 50 20 Q66 20 66 52" stroke="#3f3f46" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      {/* Collar */}
+      <rect x="36" y="50" width="28" height="12" rx="3" stroke="#3f3f46" strokeWidth="2"/>
+      {/* Ball */}
+      <circle cx="50" cy="98" r="32" stroke="#3f3f46" strokeWidth="2"/>
     </svg>
   )
 }
 
-function PullupSilhouette() {
+function RingsOutline() {
   return (
-    <svg viewBox="0 0 120 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <line x1="10" y1="10" x2="110" y2="10" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
-      <circle cx="60" cy="38" r="12" stroke="#3f3f46" strokeWidth="2.5"/>
-      <path d="M60 50 L60 110" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
-      <path d="M60 70 L35 20" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
-      <path d="M60 70 L85 20" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
-      <path d="M60 110 L40 160" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
-      <path d="M60 110 L80 160" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+    <svg viewBox="0 0 140 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      {/* Straps */}
+      <line x1="38" y1="0" x2="38" y2="90" stroke="#3f3f46" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="102" y1="0" x2="102" y2="90" stroke="#3f3f46" strokeWidth="2" strokeLinecap="round"/>
+      {/* Left ring */}
+      <circle cx="38" cy="118" r="28" stroke="#3f3f46" strokeWidth="2"/>
+      {/* Right ring */}
+      <circle cx="102" cy="118" r="28" stroke="#3f3f46" strokeWidth="2"/>
+    </svg>
+  )
+}
+
+function PullupBarOutline() {
+  return (
+    <svg viewBox="0 0 160 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      {/* Left upright */}
+      <line x1="18" y1="0" x2="18" y2="60" stroke="#3f3f46" strokeWidth="2" strokeLinecap="round"/>
+      {/* Right upright */}
+      <line x1="142" y1="0" x2="142" y2="60" stroke="#3f3f46" strokeWidth="2" strokeLinecap="round"/>
+      {/* Bar */}
+      <line x1="18" y1="30" x2="142" y2="30" stroke="#3f3f46" strokeWidth="3" strokeLinecap="round"/>
+      {/* Knurling marks */}
+      {[40, 52, 64, 76, 88, 100, 112].map(x => (
+        <line key={x} x1={x} y1="24" x2={x} y2="36" stroke="#3f3f46" strokeWidth="1.5" strokeLinecap="round"/>
+      ))}
     </svg>
   )
 }
@@ -90,12 +110,18 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 overflow-hidden">
 
-        {/* Silhouette backgrounds */}
-        <div className="absolute left-0 top-0 h-full w-48 opacity-30 pointer-events-none flex items-end">
-          <PullupSilhouette />
+        {/* Equipment outlines */}
+        <div className="absolute left-8 bottom-8 w-36 opacity-[0.12] pointer-events-none">
+          <KettlebellOutline />
         </div>
-        <div className="absolute right-0 top-0 h-full w-40 opacity-30 pointer-events-none flex items-end">
-          <KettlebellSilhouette />
+        <div className="absolute left-52 bottom-0 w-28 opacity-[0.08] pointer-events-none">
+          <KettlebellOutline />
+        </div>
+        <div className="absolute right-8 top-12 w-44 opacity-[0.10] pointer-events-none">
+          <RingsOutline />
+        </div>
+        <div className="absolute right-64 bottom-4 w-48 opacity-[0.08] pointer-events-none">
+          <PullupBarOutline />
         </div>
 
         <span className="relative text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
