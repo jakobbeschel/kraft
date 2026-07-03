@@ -46,40 +46,40 @@ function IconProgress() {
 
 function KettlebellSilhouette({ className }) {
   return (
-    <svg viewBox="0 0 120 160" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <circle cx="60" cy="45" r="30" />
-      <path d="M44 42 Q40 55 35 65 Q28 80 28 100 Q28 130 60 130 Q92 130 92 100 Q92 80 85 65 Q80 55 76 42 Z" />
-      <rect x="50" y="10" width="20" height="10" rx="5" />
-      <path d="M45 18 Q60 8 75 18" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
+    <svg viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <circle cx="60" cy="55" r="35" stroke="currentColor" strokeWidth="3"/>
+      <path d="M44 52 Q38 68 32 82 Q24 102 24 118 Q24 148 60 148 Q96 148 96 118 Q96 102 88 82 Q82 68 76 52" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M44 18 Q60 8 76 18" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <rect x="50" y="12" width="20" height="10" rx="5" stroke="currentColor" strokeWidth="3"/>
     </svg>
   )
 }
 
 function PullupSilhouette({ className }) {
   return (
-    <svg viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <line x1="10" y1="10" x2="90" y2="10" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
-      <circle cx="50" cy="38" r="12" />
-      <path d="M50 50 L50 100" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
-      <path d="M50 60 L25 30" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M50 60 L75 30" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M50 100 L30 140" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M50 100 L70 140" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
+    <svg viewBox="0 0 100 190" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <line x1="5" y1="8" x2="95" y2="8" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <circle cx="50" cy="35" r="11" stroke="currentColor" strokeWidth="3"/>
+      <line x1="50" y1="46" x2="50" y2="105" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 62 L22 22" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 62 L78 22" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 105 L32 150" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 105 L68 150" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
     </svg>
   )
 }
 
 function HandstandSilhouette({ className }) {
   return (
-    <svg viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
-      <circle cx="50" cy="145" r="12" />
-      <path d="M50 133 L50 85" stroke="currentColor" strokeWidth="8" strokeLinecap="round"/>
-      <path d="M50 115 L25 95" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M50 115 L75 95" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M50 85 L30 45" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M50 85 L70 45" stroke="currentColor" strokeWidth="7" strokeLinecap="round"/>
-      <path d="M30 45 L20 170" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
-      <path d="M70 45 L80 170" stroke="currentColor" strokeWidth="5" strokeLinecap="round"/>
+    <svg viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      <circle cx="50" cy="155" r="11" stroke="currentColor" strokeWidth="3"/>
+      <line x1="50" y1="144" x2="50" y2="95" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 118 L24 100" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 118 L76 100" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 95 L28 48" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M50 95 L72 48" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M28 48 L16 192" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+      <path d="M72 48 L84 192" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
     </svg>
   )
 }
@@ -106,10 +106,10 @@ export default function Home() {
       <section className="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 overflow-hidden">
 
         {/* Silhouettes */}
-        <KettlebellSilhouette className="absolute left-[5%] top-8 w-32 text-zinc-800 opacity-60 rotate-[-12deg]" />
-        <KettlebellSilhouette className="absolute right-[8%] bottom-4 w-20 text-zinc-800 opacity-40 rotate-[10deg]" />
-        <PullupSilhouette className="absolute right-[14%] top-6 w-24 text-zinc-800 opacity-40" />
-        <HandstandSilhouette className="absolute left-[12%] bottom-0 w-20 text-zinc-800 opacity-30" />
+        <KettlebellSilhouette className="absolute left-[3%] top-4 w-52 text-zinc-700 opacity-50 rotate-[-12deg]" />
+        <KettlebellSilhouette className="absolute right-[4%] bottom-0 w-36 text-zinc-700 opacity-35 rotate-[10deg]" />
+        <PullupSilhouette className="absolute right-[12%] top-2 w-40 text-zinc-700 opacity-35" />
+        <HandstandSilhouette className="absolute left-[10%] bottom-0 w-36 text-zinc-700 opacity-30" />
 
         <span className="relative text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
           Built for functional fitness
