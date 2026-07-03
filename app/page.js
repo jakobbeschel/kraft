@@ -4,6 +4,30 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import Nav from './components/Nav'
 
+function KettlebellSilhouette() {
+  return (
+    <svg viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      <circle cx="60" cy="55" r="38" stroke="#3f3f46" strokeWidth="2.5"/>
+      <rect x="44" y="88" width="32" height="22" rx="4" stroke="#3f3f46" strokeWidth="2.5"/>
+      <rect x="30" y="108" width="60" height="72" rx="12" stroke="#3f3f46" strokeWidth="2.5"/>
+    </svg>
+  )
+}
+
+function PullupSilhouette() {
+  return (
+    <svg viewBox="0 0 120 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+      <line x1="10" y1="10" x2="110" y2="10" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+      <circle cx="60" cy="38" r="12" stroke="#3f3f46" strokeWidth="2.5"/>
+      <path d="M60 50 L60 110" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M60 70 L35 20" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M60 70 L85 20" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M60 110 L40 160" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M60 110 L80 160" stroke="#3f3f46" strokeWidth="2.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 function IconComplex() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,15 +90,13 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 overflow-hidden">
 
-        {/* Ghosted photo backgrounds */}
-        <div
-          className="absolute left-0 top-0 h-full w-64 bg-no-repeat bg-contain bg-bottom opacity-[0.06] pointer-events-none"
-          style={{ backgroundImage: "url('/pullup.jpg.avif')" }}
-        />
-        <div
-          className="absolute right-0 top-0 h-full w-72 bg-no-repeat bg-contain bg-bottom opacity-[0.07] pointer-events-none"
-          style={{ backgroundImage: "url('/kb-swing.jpg.jpg')" }}
-        />
+        {/* Silhouette backgrounds */}
+        <div className="absolute left-0 top-0 h-full w-48 opacity-30 pointer-events-none flex items-end">
+          <PullupSilhouette />
+        </div>
+        <div className="absolute right-0 top-0 h-full w-40 opacity-30 pointer-events-none flex items-end">
+          <KettlebellSilhouette />
+        </div>
 
         <span className="relative text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
           Built for functional fitness
