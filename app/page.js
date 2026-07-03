@@ -108,20 +108,14 @@ export default function Home() {
       <Nav current="Home" />
 
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 overflow-hidden">
+      <section className="relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24">
 
         {/* Equipment outlines */}
-        <div className="absolute left-8 bottom-8 w-36 opacity-[0.12] pointer-events-none">
+        <div className="absolute left-8 bottom-8 w-48 opacity-40 pointer-events-none">
           <KettlebellOutline />
         </div>
-        <div className="absolute left-52 bottom-0 w-28 opacity-[0.08] pointer-events-none">
-          <KettlebellOutline />
-        </div>
-        <div className="absolute right-8 top-12 w-44 opacity-[0.10] pointer-events-none">
+        <div className="absolute right-8 top-12 w-52 opacity-40 pointer-events-none">
           <RingsOutline />
-        </div>
-        <div className="absolute right-64 bottom-4 w-48 opacity-[0.08] pointer-events-none">
-          <PullupBarOutline />
         </div>
 
         <span className="relative text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
