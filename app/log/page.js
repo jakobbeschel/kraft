@@ -329,9 +329,14 @@ function LogWorkout() {
               </div>
               <div>
                 <label className="text-xs text-zinc-500 block mb-1">Incline</label>
-                <input type="text" placeholder="e.g. 2%" value={run.incline}
-                  onChange={e => updateRun('incline', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={run.incline.replace('%', '')}
+                  onChange={e => updateRun('incline', e.target.value ? `${e.target.value}%` : '')}
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none"
+                />
               </div>
               <div>
                 <label className="text-xs text-zinc-500 block mb-1">Notes</label>
