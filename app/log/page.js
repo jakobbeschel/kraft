@@ -164,9 +164,28 @@ function LogWorkout() {
     }))
   }
 
-  // Update a run field
+  function calcPace(duration, distance) {
+    const d = parseFloat(duration)
+    const dist = parseFloat(distance)
+    if (!d || !dist || dist === 0) return ''
+    const total = d / dist
+    const mins = Math.floor(total)
+    const secs = Math.round((total - mins) * 60).toString().padStart(2, '0')
+    return `${mins}:${secs}`
+  }
+
   function updateRun(field, value) {
-    setRun(prev => ({ ...prev, [field]: value }))
+    setRun(prev => {
+      const next = { ...prev, [field]: value }
+      if (field === 'duration' || field === 'distance') {
+        const pace = calcPace(
+          field === 'duration' ? value : prev.duration,
+          field === 'distance' ? value : prev.distance
+        )
+        if (pace) next.pace = pace
+      }
+      return next
+    })
   }
 
   // Add an interval split row

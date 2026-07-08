@@ -10,6 +10,7 @@ const PAGES = [
   { label: 'Progress', href: '/progress' },
   { label: 'Library', href: '/library' },
   { label: 'Program', href: '/program' },
+  { label: 'Settings', href: '/settings' },
 ]
 
 export default function Nav({ current }) {
