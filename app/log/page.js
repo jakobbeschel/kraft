@@ -40,6 +40,7 @@ function LogWorkout() {
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
   const [unit, setUnit] = useState('lbs')
+  const [distUnit, setDistUnit] = useState('mi')
 
   useEffect(() => {
     async function load() {
@@ -118,6 +119,7 @@ function LogWorkout() {
       }
 
       setUnit(localStorage.getItem('kraft_unit') || 'lbs')
+      setDistUnit(localStorage.getItem('kraft_dist_unit') || 'mi')
       setLoading(false)
     }
 
@@ -128,6 +130,12 @@ function LogWorkout() {
     const next = unit === 'lbs' ? 'kg' : 'lbs'
     setUnit(next)
     localStorage.setItem('kraft_unit', next)
+  }
+
+  function toggleDistUnit() {
+    const next = distUnit === 'mi' ? 'km' : 'mi'
+    setDistUnit(next)
+    localStorage.setItem('kraft_dist_unit', next)
   }
 
   // Add a set to an exercise
@@ -259,7 +267,15 @@ function LogWorkout() {
         {/* Run section */}
         {includesRun && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-6">
-            <h2 className="font-medium mb-4">Run</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-medium">Run</h2>
+              <button
+                onClick={toggleDistUnit}
+                className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors"
+              >
+                {distUnit === 'mi' ? 'Switch to km' : 'Switch to mi'}
+              </button>
+            </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
@@ -275,20 +291,20 @@ function LogWorkout() {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Duration</label>
-                <input type="text" placeholder="e.g. 35 min" value={run.duration}
+                <label className="text-xs text-zinc-500 block mb-1">Duration (min)</label>
+                <input type="number" inputMode="numeric" placeholder="35" value={run.duration}
                   onChange={e => updateRun('duration', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Distance</label>
-                <input type="text" placeholder="e.g. 5.2 km" value={run.distance}
+                <label className="text-xs text-zinc-500 block mb-1">Distance ({distUnit})</label>
+                <input type="number" inputMode="decimal" placeholder="3.1" value={run.distance}
                   onChange={e => updateRun('distance', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Avg pace</label>
-                <input type="text" placeholder="e.g. 5:30 /km" value={run.pace}
+                <label className="text-xs text-zinc-500 block mb-1">Avg pace (/{distUnit})</label>
+                <input type="text" placeholder={distUnit === 'mi' ? "e.g. 8:30" : "e.g. 5:15"} value={run.pace}
                   onChange={e => updateRun('pace', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
               </div>
