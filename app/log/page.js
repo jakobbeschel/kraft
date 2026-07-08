@@ -25,6 +25,8 @@ function LogWorkout() {
 
   const [user, setUser] = useState(null)
   const [day, setDay] = useState(null)
+  const [dayName, setDayName] = useState('')
+  const [editingName, setEditingName] = useState(false)
   const [exercises, setExercises] = useState([])
   const [sets, setSets] = useState({})
   const [run, setRun] = useState({
@@ -58,6 +60,7 @@ function LogWorkout() {
 
       if (!dayData) { router.push('/dashboard'); return }
       setDay(dayData)
+      setDayName(dayData.day_name)
 
       const { data: exData } = await supabase
         .from('exercises')
@@ -259,6 +262,10 @@ function LogWorkout() {
         }
       }
 
+      if (dayName !== day.day_name) {
+        await supabase.from('program_days').update({ day_name: dayName }).eq('id', dayId)
+      }
+
       router.push('/dashboard')
 
     } catch (err) {
@@ -278,7 +285,28 @@ function LogWorkout() {
       <Nav current={editLogId ? 'Edit log' : 'Log workout'} />
 
       <div className="max-w-3xl mx-auto px-8 py-12">
-        <h1 className="text-2xl font-semibold mb-1">{day.day_name}</h1>
+        <div className="mb-1">
+          {editingName ? (
+            <input
+              autoFocus
+              type="text"
+              value={dayName}
+              onChange={e => setDayName(e.target.value)}
+              onBlur={() => setEditingName(false)}
+              onKeyDown={e => e.key === 'Enter' && setEditingName(false)}
+              className="text-2xl font-semibold bg-transparent border-b border-zinc-600 outline-none w-full"
+            />
+          ) : (
+            <h1
+              className="text-2xl font-semibold cursor-text hover:opacity-80 transition-opacity"
+              onClick={() => setEditingName(true)}
+              title="Click to edit"
+            >
+              {dayName}
+              <span className="text-zinc-600 text-sm font-normal ml-2">✎</span>
+            </h1>
+          )}
+        </div>
         <p className="text-zinc-400 text-sm mb-10">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
