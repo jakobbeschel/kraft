@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -93,7 +93,7 @@ export default function Library() {
 
   if (loading) return (
     <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-      <span className="text-zinc-500 text-sm">Loading library...</span>
+      <span className="text-zinc-400 text-sm">Loading library...</span>
     </main>
   )
 
@@ -111,7 +111,7 @@ export default function Library() {
             + Add movement
           </button>
         </div>
-        <p className="text-zinc-500 text-sm mb-8">Browse kettlebell and calisthenics movements. Use these when building your program.</p>
+        <p className="text-zinc-400 text-sm mb-8">Browse kettlebell and calisthenics movements. Use these when building your program.</p>
 
         {showAdd && (
           <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 mb-8">
@@ -149,7 +149,7 @@ export default function Library() {
                 </button>
                 <button
                   onClick={() => setShowAdd(false)}
-                  className="text-sm text-zinc-500 hover:text-white transition-colors"
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
                 >
                   Cancel
                 </button>
@@ -177,7 +177,7 @@ export default function Library() {
 
         {complexes.length > 0 && (
           <div className="mb-10">
-            <h2 className="text-xs text-zinc-500 uppercase tracking-widest mb-4">Complexes</h2>
+            <h2 className="text-xs text-zinc-400 uppercase tracking-widest mb-4">Complexes</h2>
             <div className="flex flex-col gap-3">
               {complexes.map(m => (
                 <MovementCard key={m.id} m={m} editingId={editingId} editName={editName} editDescription={editDescription} editCategory={editCategory} setEditName={setEditName} setEditDescription={setEditDescription} setEditCategory={setEditCategory} startEdit={startEdit} saveEdit={saveEdit} deleteMovement={deleteMovement} setEditingId={setEditingId} saving={saving} />
@@ -188,7 +188,7 @@ export default function Library() {
 
         {singles.length > 0 && (
           <div>
-            <h2 className="text-xs text-zinc-500 uppercase tracking-widest mb-4">Single movements</h2>
+            <h2 className="text-xs text-zinc-400 uppercase tracking-widest mb-4">Single movements</h2>
             <div className="flex flex-col gap-3">
               {singles.map(m => (
                 <MovementCard key={m.id} m={m} editingId={editingId} editName={editName} editDescription={editDescription} editCategory={editCategory} setEditName={setEditName} setEditDescription={setEditDescription} setEditCategory={setEditCategory} startEdit={startEdit} saveEdit={saveEdit} deleteMovement={deleteMovement} setEditingId={setEditingId} saving={saving} />
@@ -236,7 +236,7 @@ function MovementCard({ m, editingId, editName, editDescription, editCategory, s
           <button onClick={saveEdit} disabled={saving} className="text-sm bg-white text-zinc-950 px-4 py-1.5 rounded-lg font-medium hover:bg-zinc-200 disabled:opacity-50">
             {saving ? 'Saving...' : 'Save'}
           </button>
-          <button onClick={() => setEditingId(null)} className="text-sm text-zinc-500 hover:text-white transition-colors">
+          <button onClick={() => setEditingId(null)} className="text-sm text-zinc-400 hover:text-white transition-colors">
             Cancel
           </button>
         </div>
@@ -248,7 +248,7 @@ function MovementCard({ m, editingId, editName, editDescription, editCategory, s
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-5 py-4 flex items-start justify-between group">
       <div>
         <span className="font-medium text-sm">{m.name}</span>
-        {m.description && <p className="text-zinc-500 text-xs mt-1">{m.description}</p>}
+        {m.description && <p className="text-zinc-400 text-xs mt-1">{m.description}</p>}
       </div>
       <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity ml-4 shrink-0">
         <button onClick={() => startEdit(m)} className="text-xs text-zinc-400 hover:text-white transition-colors">Edit</button>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -9,7 +9,7 @@ export default function LogWorkoutPage() {
   return (
     <Suspense fallback={
       <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-        <span className="text-zinc-500 text-sm">Loading...</span>
+        <span className="text-zinc-400 text-sm">Loading...</span>
       </main>
     }>
       <LogWorkout />
@@ -279,7 +279,7 @@ function LogWorkout() {
 
       <div className="max-w-3xl mx-auto px-8 py-12">
         <h1 className="text-2xl font-semibold mb-1">{day.day_name}</h1>
-        <p className="text-zinc-500 text-sm mb-10">
+        <p className="text-zinc-400 text-sm mb-10">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
 
@@ -290,7 +290,7 @@ function LogWorkout() {
               <h2 className="font-medium">Run</h2>
               <button
                 onClick={toggleDistUnit}
-                className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors"
+                className="text-xs text-zinc-400 border border-zinc-700 rounded-lg px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors"
               >
                 {distUnit === 'mi' ? 'Switch to km' : 'Switch to mi'}
               </button>
@@ -298,7 +298,7 @@ function LogWorkout() {
 
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Type</label>
+                <label className="text-xs text-zinc-400 block mb-1">Type</label>
                 <select
                   value={run.run_type}
                   onChange={e => updateRun('run_type', e.target.value)}
@@ -310,25 +310,25 @@ function LogWorkout() {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Duration (min)</label>
+                <label className="text-xs text-zinc-400 block mb-1">Duration (min)</label>
                 <input type="number" inputMode="numeric" placeholder="35" value={run.duration}
                   onChange={e => updateRun('duration', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Distance ({distUnit})</label>
+                <label className="text-xs text-zinc-400 block mb-1">Distance ({distUnit})</label>
                 <input type="number" inputMode="decimal" placeholder="3.1" value={run.distance}
                   onChange={e => updateRun('distance', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Avg pace (/{distUnit})</label>
+                <label className="text-xs text-zinc-400 block mb-1">Avg pace (/{distUnit})</label>
                 <input type="text" placeholder={distUnit === 'mi' ? "e.g. 8:30" : "e.g. 5:15"} value={run.pace}
                   onChange={e => updateRun('pace', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Incline</label>
+                <label className="text-xs text-zinc-400 block mb-1">Incline</label>
                 <input
                   type="text"
                   inputMode="decimal"
@@ -342,7 +342,7 @@ function LogWorkout() {
                 />
               </div>
               <div>
-                <label className="text-xs text-zinc-500 block mb-1">Notes</label>
+                <label className="text-xs text-zinc-400 block mb-1">Notes</label>
                 <input type="text" placeholder="Felt strong..." value={run.notes}
                   onChange={e => updateRun('notes', e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none" />
@@ -352,9 +352,9 @@ function LogWorkout() {
             {/* Interval splits */}
             <button
               onClick={() => setShowSplits(!showSplits)}
-              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors mb-3"
+              className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors mb-3"
             >
-              {showSplits ? '− Hide interval splits' : '+ Log interval splits'}
+              {showSplits ? 'âˆ’ Hide interval splits' : '+ Log interval splits'}
             </button>
 
             {showSplits && (
@@ -374,11 +374,11 @@ function LogWorkout() {
                       <input type="text" placeholder="" value={s.notes}
                         onChange={e => updateSplit(i, 'notes', e.target.value)}
                         className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none" />
-                      <button onClick={() => removeSplit(i)} className="text-zinc-600 hover:text-red-400 text-xs">✕</button>
+                      <button onClick={() => removeSplit(i)} className="text-zinc-600 hover:text-red-400 text-xs">âœ•</button>
                     </div>
                   </div>
                 ))}
-                <button onClick={addSplit} className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors mt-1">
+                <button onClick={addSplit} className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors mt-1">
                   + Add split
                 </button>
               </div>
@@ -393,7 +393,7 @@ function LogWorkout() {
               <h2 className="font-medium">Exercises</h2>
               <button
                 onClick={toggleUnit}
-                className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors"
+                className="text-xs text-zinc-400 border border-zinc-700 rounded-lg px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors"
               >
                 {unit === 'lbs' ? 'Switch to kg' : 'Switch to lbs'}
               </button>
@@ -407,7 +407,7 @@ function LogWorkout() {
                   <span className="font-medium text-sm">{ex.name}</span>
                   {ex.movements.length > 0 && (
                     <span className="text-zinc-600 text-xs ml-2">
-                      {ex.movements.map(m => m.name).join(' → ')}
+                      {ex.movements.map(m => m.name).join(' â†’ ')}
                     </span>
                   )}
                 </div>
@@ -427,7 +427,7 @@ function LogWorkout() {
                       <input
                         type="number"
                         inputMode="numeric"
-                        placeholder={ex.is_hold ? 'sec' : '—'}
+                        placeholder={ex.is_hold ? 'sec' : 'â€”'}
                         value={s.reps}
                         onChange={e => updateSet(ex.id, i, 'reps', e.target.value)}
                         className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none w-full"
@@ -441,7 +441,7 @@ function LogWorkout() {
                         className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none w-full"
                       />
                       {(sets[ex.id] || []).length > 1 ? (
-                        <button onClick={() => removeSet(ex.id, i)} className="text-zinc-600 hover:text-red-400 text-xs">✕</button>
+                        <button onClick={() => removeSet(ex.id, i)} className="text-zinc-600 hover:text-red-400 text-xs">âœ•</button>
                       ) : <span />}
                     </div>
                     <input
@@ -456,7 +456,7 @@ function LogWorkout() {
 
                 <button
                   onClick={() => addSet(ex.id)}
-                  className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors mt-2"
+                  className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors mt-2"
                 >
                   + Add set
                 </button>

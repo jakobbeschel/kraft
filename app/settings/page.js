@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -60,7 +60,7 @@ export default function Settings() {
 
       <div className="max-w-2xl mx-auto px-8 py-12">
         <h1 className="text-2xl font-semibold mb-1">Settings</h1>
-        <p className="text-zinc-500 text-sm mb-10">Your preferences are saved automatically.</p>
+        <p className="text-zinc-400 text-sm mb-10">Your preferences are saved automatically.</p>
 
         <div className="flex flex-col gap-4">
           {PREFS.map(pref => (
@@ -68,7 +68,7 @@ export default function Settings() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="font-medium text-sm">{pref.label}</p>
-                  <p className="text-zinc-500 text-xs mt-0.5">{pref.description}</p>
+                  <p className="text-zinc-400 text-xs mt-0.5">{pref.description}</p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   {pref.options.map(opt => (

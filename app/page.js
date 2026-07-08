@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
@@ -118,7 +118,7 @@ export default function Home() {
           <RingsOutline />
         </div>
 
-        <span className="relative text-xs text-zinc-500 uppercase tracking-[0.2em] mb-6">
+        <span className="relative text-xs text-zinc-400 uppercase tracking-[0.2em] mb-6">
           Built for functional fitness
         </span>
         <h1 className="relative text-6xl font-bold tracking-tight max-w-2xl leading-[1.1] mb-6">
@@ -139,7 +139,7 @@ export default function Home() {
                   Get started - free
                 </a>
                 <a href="/login" className="text-zinc-400 hover:text-white transition-colors text-sm">
-                  Already have an account →
+                  Already have an account â†’
                 </a>
               </>
             )
@@ -154,7 +154,7 @@ export default function Home() {
 
       {/* How it works */}
       <section className="px-8 py-24 max-w-5xl mx-auto">
-        <span className="block text-xs text-zinc-500 uppercase tracking-[0.2em] text-center mb-4">How it works</span>
+        <span className="block text-xs text-zinc-400 uppercase tracking-[0.2em] text-center mb-4">How it works</span>
         <h2 className="text-2xl font-semibold text-center mb-16">From program to logged in minutes</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div className="flex flex-col">
@@ -188,7 +188,7 @@ export default function Home() {
 
       {/* Features */}
       <section id="features" className="px-8 py-24 max-w-5xl mx-auto">
-        <span className="block text-xs text-zinc-500 uppercase tracking-[0.2em] text-center mb-4">Features</span>
+        <span className="block text-xs text-zinc-400 uppercase tracking-[0.2em] text-center mb-4">Features</span>
         <h2 className="text-2xl font-semibold text-center mb-16">Everything your training needs</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
@@ -258,7 +258,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800 px-8 py-6 text-center text-zinc-600 text-sm">
-        © 2026 Kraft. All rights reserved.
+        Â© 2026 Kraft. All rights reserved.
       </footer>
 
     </main>

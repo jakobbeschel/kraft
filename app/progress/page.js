@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -155,7 +155,7 @@ export default function Progress() {
 
   if (loading) return (
     <main className="min-h-screen bg-zinc-900 text-white flex items-center justify-center">
-      <span className="text-zinc-500 text-sm">Loading...</span>
+      <span className="text-zinc-400 text-sm">Loading...</span>
     </main>
   )
 
@@ -165,7 +165,7 @@ export default function Progress() {
 
       <div className="max-w-4xl mx-auto px-8 py-12">
         <h1 className="text-2xl font-semibold mb-1">Progress</h1>
-        <p className="text-zinc-500 text-sm mb-10">Track how your lifts have improved over time.</p>
+        <p className="text-zinc-400 text-sm mb-10">Track how your lifts have improved over time.</p>
 
         {exercises.length === 0 ? (
           <p className="text-zinc-600 text-sm text-center py-24">No logged workouts yet. Start logging to see your progress.</p>
@@ -174,7 +174,7 @@ export default function Progress() {
             {/* Controls */}
             <div className="flex flex-wrap gap-4 mb-8">
               <div className="flex-1 min-w-48">
-                <label className="text-xs text-zinc-500 block mb-1.5">Exercise</label>
+                <label className="text-xs text-zinc-400 block mb-1.5">Exercise</label>
                 <select
                   value={selectedExercise || ''}
                   onChange={e => setSelectedExercise(e.target.value)}
@@ -187,7 +187,7 @@ export default function Progress() {
               </div>
 
               <div>
-                <label className="text-xs text-zinc-500 block mb-1.5">Metric</label>
+                <label className="text-xs text-zinc-400 block mb-1.5">Metric</label>
                 <div className="flex gap-1">
                   {METRICS.map(m => (
                     <button
@@ -202,7 +202,7 @@ export default function Progress() {
               </div>
 
               <div>
-                <label className="text-xs text-zinc-500 block mb-1.5">Time range</label>
+                <label className="text-xs text-zinc-400 block mb-1.5">Time range</label>
                 <div className="flex gap-1">
                   {TIME_RANGES.map(r => (
                     <button
@@ -222,15 +222,15 @@ export default function Progress() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <span className="font-medium">{selectedName}</span>
-                  <span className="text-zinc-500 text-sm ml-2">
-                    {metric === 'weight' ? 'Best weight per session' : 'Volume per session (reps × weight)'}
+                  <span className="text-zinc-400 text-sm ml-2">
+                    {metric === 'weight' ? 'Best weight per session' : 'Volume per session (reps Ã— weight)'}
                   </span>
                 </div>
               </div>
 
               {loadingChart ? (
                 <div className="flex items-center justify-center h-48">
-                  <span className="text-zinc-500 text-sm">Loading...</span>
+                  <span className="text-zinc-400 text-sm">Loading...</span>
                 </div>
               ) : chartData.length === 0 ? (
                 <div className="flex items-center justify-center h-48">

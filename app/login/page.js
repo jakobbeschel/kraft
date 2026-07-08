@@ -1,4 +1,4 @@
-// This is the log in page — existing users sign in to Kraft here
+﻿// This is the log in page â€” existing users sign in to Kraft here
 
 'use client'
 
@@ -59,7 +59,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 // Allow login by pressing Enter instead of clicking the button
                 onKeyDown={e => e.key === 'Enter' && handleLogin()}
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-zinc-500"
@@ -79,7 +79,7 @@ export default function Login() {
             </button>
           </div>
 
-          <p className="text-center text-zinc-500 text-sm mt-6">
+          <p className="text-center text-zinc-400 text-sm mt-6">
             Don't have an account?{' '}
             <a href="/signup" className="text-white hover:underline">Sign up</a>
           </p>

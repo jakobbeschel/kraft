@@ -1,4 +1,4 @@
-// This is the dashboard — loads the user's program and shows their weekly training
+﻿// This is the dashboard â€” loads the user's program and shows their weekly training
 
 'use client'
 
@@ -184,11 +184,11 @@ export default function Dashboard() {
     ? 'Last week'
     : weekOffset === 1
     ? 'Next week'
-    : `${formatDate(monday)} – ${formatDate(sunday)}`
+    : `${formatDate(monday)} â€“ ${formatDate(sunday)}`
 
   if (loading) return (
     <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
-      <span className="text-zinc-500 text-sm">Loading your program...</span>
+      <span className="text-zinc-400 text-sm">Loading your program...</span>
     </main>
   )
 
@@ -231,19 +231,19 @@ export default function Dashboard() {
                 onClick={() => setWeekOffset(w => w - 1)}
                 className="text-zinc-400 hover:text-white transition-colors text-sm px-2"
               >
-                ← Prev
+                â† Prev
               </button>
               <div className="text-center">
                 <span className="text-sm font-medium">{weekLabel}</span>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  {formatDate(monday)} – {formatDate(sunday)}
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  {formatDate(monday)} â€“ {formatDate(sunday)}
                 </p>
               </div>
               <button
                 onClick={() => setWeekOffset(w => w + 1)}
                 className="text-zinc-400 hover:text-white transition-colors text-sm px-2"
               >
-                Next →
+                Next â†’
               </button>
             </div>
 
@@ -263,11 +263,11 @@ export default function Dashboard() {
                           onClick={() => toggleHistory(day.id)}
                           className="text-xs bg-green-900 text-green-400 px-2 py-0.5 rounded-full hover:bg-green-800 transition-colors"
                         >
-                          Logged {expandedLog === day.id ? '▲' : '▼'}
+                          Logged {expandedLog === day.id ? 'â–²' : 'â–¼'}
                         </button>
                       )}
                     </div>
-                    <span className="text-xs text-zinc-500 bg-zinc-800 px-3 py-1 rounded-full">
+                    <span className="text-xs text-zinc-400 bg-zinc-800 px-3 py-1 rounded-full">
                       {DAY_TYPE_LABELS[day.day_type] || day.day_type}
                     </span>
                   </div>
@@ -277,7 +277,7 @@ export default function Dashboard() {
                   )}
 
                   {day.day_type === 'run' && (
-                    <p className="text-zinc-500 text-sm">Running session</p>
+                    <p className="text-zinc-400 text-sm">Running session</p>
                   )}
 
                   {day.exercises.length > 0 && (
@@ -292,7 +292,7 @@ export default function Dashboard() {
                                 className="text-zinc-600 hover:text-zinc-300 transition-colors text-xs leading-none"
                                 title="View description"
                               >
-                                ⓘ
+                                â“˜
                               </button>
                             )}
                           </div>
@@ -303,7 +303,7 @@ export default function Dashboard() {
                           )}
                           {ex.movements.length > 0 && (
                             <span className="text-zinc-600 text-xs ml-0">
-                              {ex.movements.map(m => m.name).join(' → ')}
+                              {ex.movements.map(m => m.name).join(' â†’ ')}
                             </span>
                           )}
                         </div>
@@ -316,7 +316,7 @@ export default function Dashboard() {
                       {logHistory[day.id].runs.map((run, i) => (
                         <div key={i} className="mb-3 text-sm text-zinc-400">
                           <span className="text-zinc-300 font-medium">{run.run_type} run</span>
-                          <div className="flex flex-wrap gap-4 mt-1 text-xs text-zinc-500">
+                          <div className="flex flex-wrap gap-4 mt-1 text-xs text-zinc-400">
                             {run.duration && <span>Duration: {run.duration}</span>}
                             {run.distance && <span>Distance: {run.distance}</span>}
                             {run.pace && <span>Pace: {run.pace}</span>}
@@ -337,7 +337,7 @@ export default function Dashboard() {
                             <span className="text-sm text-zinc-300 font-medium">{name}</span>
                             <div className="mt-1 flex flex-col gap-1">
                               {sets.map((s, i) => (
-                                <div key={i} className="text-xs text-zinc-500 flex gap-4">
+                                <div key={i} className="text-xs text-zinc-400 flex gap-4">
                                   <span>Set {s.set_number}</span>
                                   {s.reps && <span>{s.reps} reps</span>}
                                   {s.weight && <span>{s.weight}</span>}
@@ -360,7 +360,7 @@ export default function Dashboard() {
                         <>
                           <button
                             onClick={() => router.push(`/log?dayId=${day.id}&logId=${getLogId(day.id)}`)}
-                            className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
+                            className="text-xs text-zinc-400 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
                           >
                             Edit log
                           </button>
@@ -380,7 +380,7 @@ export default function Dashboard() {
                       ) : (
                         <button
                           onClick={() => router.push(`/log?dayId=${day.id}`)}
-                          className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
+                          className="text-xs text-zinc-400 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
                         >
                           Log workout
                         </button>

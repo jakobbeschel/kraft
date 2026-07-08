@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -48,7 +48,7 @@ export default function Nav({ current }) {
 
       <div className="flex items-center gap-4">
         {user && (
-          <span className="text-sm text-zinc-500 hidden sm:block">{user.email}</span>
+          <span className="text-sm text-zinc-400 hidden sm:block">{user.email}</span>
         )}
 
         <div className="relative" ref={ref}>
@@ -57,7 +57,7 @@ export default function Nav({ current }) {
             className="flex items-center gap-1.5 text-sm text-zinc-300 hover:text-white transition-colors bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2"
           >
             {current}
-            <span className="text-zinc-500 text-xs">{open ? '▲' : '▼'}</span>
+            <span className="text-zinc-400 text-xs">{open ? 'â–²' : 'â–¼'}</span>
           </button>
 
           {open && (
