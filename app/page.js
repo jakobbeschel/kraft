@@ -160,21 +160,21 @@ export default function Home() {
           <div className="flex flex-col">
             <span className="text-4xl font-bold text-zinc-700 mb-4">01</span>
             <h3 className="font-semibold mb-2">Build your program</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               Set up your weekly training split. Choose day types, add exercises, and pull movements straight from the library.
             </p>
           </div>
           <div className="flex flex-col">
             <span className="text-4xl font-bold text-zinc-700 mb-4">02</span>
             <h3 className="font-semibold mb-2">Log each session</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               Record sets, reps, and weight for lifts. Log pace, distance, and interval splits for runs. All in one place.
             </p>
           </div>
           <div className="flex flex-col">
             <span className="text-4xl font-bold text-zinc-700 mb-4">03</span>
             <h3 className="font-semibold mb-2">Track your progress</h3>
-            <p className="text-zinc-500 text-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               See what you lifted last week. Review past sessions directly from your dashboard. Know exactly where you stand.
             </p>
           </div>
