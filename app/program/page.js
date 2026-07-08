@@ -1,4 +1,4 @@
-﻿// This is the program builder â€” creates a new program or edits an existing one
+﻿// This is the program builder — creates a new program or edits an existing one
 
 'use client'
 
@@ -249,7 +249,7 @@ export default function ProgramBuilder() {
             .update({ day_type: day.day_type })
             .eq('id', dayId)
 
-          // Delete in order: logged_sets â†’ movements â†’ exercises
+          // Delete in order: logged_sets → movements → exercises
           const { data: existingExercises } = await supabase
             .from('exercises')
             .select('id')
@@ -365,7 +365,7 @@ export default function ProgramBuilder() {
 
               {(day.day_type === 'run' || day.day_type === 'run+lift' || day.day_type === 'run+opt') && (
                 <div className="flex items-start gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 mb-3 text-sm text-zinc-400">
-                  <span className="mt-0.5">â„¹ï¸</span>
+                  <span className="mt-0.5">ℹ️</span>
                   <span>Run details like pace, distance, and intervals are logged when you record each session - not set up here.</span>
                 </div>
               )}
@@ -387,7 +387,7 @@ export default function ProgramBuilder() {
                           onClick={() => removeExercise(dayIndex, exIndex)}
                           className="text-zinc-400 hover:text-red-400 transition-colors text-sm px-2"
                         >
-                          âœ•
+                          ✕
                         </button>
                       </div>
 
@@ -396,7 +396,7 @@ export default function ProgramBuilder() {
                           onClick={() => setPickerOpen(pickerOpen?.dayIndex === dayIndex && pickerOpen?.exIndex === exIndex ? null : { dayIndex, exIndex })}
                           className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors"
                         >
-                          Choose from library â–¾
+                          Choose from library ▾
                         </button>
                         {pickerOpen?.dayIndex === dayIndex && pickerOpen?.exIndex === exIndex && (
                           <div className="absolute left-0 top-6 z-10 bg-zinc-800 border border-zinc-700 rounded-xl shadow-xl w-72 max-h-64 overflow-y-auto">
@@ -452,10 +452,10 @@ export default function ProgramBuilder() {
                                 onClick={() => removeMovement(dayIndex, exIndex, mvIndex)}
                                 className="text-zinc-600 hover:text-red-400 text-xs"
                               >
-                                âœ•
+                                ✕
                               </button>
                               {mvIndex < ex.movements.length - 1 && (
-                                <span className="text-zinc-600 text-xs">â†’</span>
+                                <span className="text-zinc-600 text-xs">→</span>
                               )}
                             </div>
                           ))}

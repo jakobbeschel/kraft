@@ -57,7 +57,7 @@ export default function Nav({ current }) {
             className="flex items-center gap-1.5 text-sm text-zinc-300 hover:text-white transition-colors bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2"
           >
             {current}
-            <span className="text-zinc-400 text-xs">{open ? 'â–²' : 'â–¼'}</span>
+            <span className="text-zinc-400 text-xs">{open ? '▲' : '▼'}</span>
           </button>
 
           {open && (

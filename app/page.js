@@ -139,7 +139,7 @@ export default function Home() {
                   Get started - free
                 </a>
                 <a href="/login" className="text-zinc-400 hover:text-white transition-colors text-sm">
-                  Already have an account â†’
+                  Already have an account →
                 </a>
               </>
             )
@@ -258,7 +258,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800 px-8 py-6 text-center text-zinc-600 text-sm">
-        Â© 2026 Kraft. All rights reserved.
+        © 2026 Kraft. All rights reserved.
       </footer>
 
     </main>

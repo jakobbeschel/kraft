@@ -1,4 +1,4 @@
-﻿// This is the sign up page â€” new users create their Kraft account here
+﻿// This is the sign up page — new users create their Kraft account here
 
 'use client'
 
@@ -63,7 +63,7 @@ export default function SignUp() {
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-zinc-500"
                   />
                 </div>

@@ -382,7 +382,7 @@ function LogWorkout() {
               onClick={() => setShowSplits(!showSplits)}
               className="text-xs text-zinc-400 hover:text-zinc-300 transition-colors mb-3"
             >
-              {showSplits ? 'âˆ’ Hide interval splits' : '+ Log interval splits'}
+              {showSplits ? '− Hide interval splits' : '+ Log interval splits'}
             </button>
 
             {showSplits && (
@@ -402,7 +402,7 @@ function LogWorkout() {
                       <input type="text" placeholder="" value={s.notes}
                         onChange={e => updateSplit(i, 'notes', e.target.value)}
                         className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none" />
-                      <button onClick={() => removeSplit(i)} className="text-zinc-600 hover:text-red-400 text-xs">âœ•</button>
+                      <button onClick={() => removeSplit(i)} className="text-zinc-600 hover:text-red-400 text-xs">✕</button>
                     </div>
                   </div>
                 ))}
@@ -435,7 +435,7 @@ function LogWorkout() {
                   <span className="font-medium text-sm">{ex.name}</span>
                   {ex.movements.length > 0 && (
                     <span className="text-zinc-600 text-xs ml-2">
-                      {ex.movements.map(m => m.name).join(' â†’ ')}
+                      {ex.movements.map(m => m.name).join(' → ')}
                     </span>
                   )}
                 </div>
@@ -455,7 +455,7 @@ function LogWorkout() {
                       <input
                         type="number"
                         inputMode="numeric"
-                        placeholder={ex.is_hold ? 'sec' : 'â€”'}
+                        placeholder={ex.is_hold ? 'sec' : '—'}
                         value={s.reps}
                         onChange={e => updateSet(ex.id, i, 'reps', e.target.value)}
                         className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none w-full"
@@ -469,7 +469,7 @@ function LogWorkout() {
                         className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none w-full"
                       />
                       {(sets[ex.id] || []).length > 1 ? (
-                        <button onClick={() => removeSet(ex.id, i)} className="text-zinc-600 hover:text-red-400 text-xs">âœ•</button>
+                        <button onClick={() => removeSet(ex.id, i)} className="text-zinc-600 hover:text-red-400 text-xs">✕</button>
                       ) : <span />}
                     </div>
                     <input

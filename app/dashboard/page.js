@@ -1,4 +1,4 @@
-﻿// This is the dashboard â€” loads the user's program and shows their weekly training
+﻿// This is the dashboard — loads the user's program and shows their weekly training
 
 'use client'
 
@@ -184,7 +184,7 @@ export default function Dashboard() {
     ? 'Last week'
     : weekOffset === 1
     ? 'Next week'
-    : `${formatDate(monday)} â€“ ${formatDate(sunday)}`
+    : `${formatDate(monday)} � ${formatDate(sunday)}`
 
   if (loading) return (
     <main className="min-h-screen bg-zinc-950 text-white flex items-center justify-center">
@@ -231,19 +231,19 @@ export default function Dashboard() {
                 onClick={() => setWeekOffset(w => w - 1)}
                 className="text-zinc-400 hover:text-white transition-colors text-sm px-2"
               >
-                â† Prev
+                ← Prev
               </button>
               <div className="text-center">
                 <span className="text-sm font-medium">{weekLabel}</span>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  {formatDate(monday)} â€“ {formatDate(sunday)}
+                  {formatDate(monday)} – {formatDate(sunday)}
                 </p>
               </div>
               <button
                 onClick={() => setWeekOffset(w => w + 1)}
                 className="text-zinc-400 hover:text-white transition-colors text-sm px-2"
               >
-                Next â†’
+                Next →
               </button>
             </div>
 
@@ -263,7 +263,7 @@ export default function Dashboard() {
                           onClick={() => toggleHistory(day.id)}
                           className="text-xs bg-green-900 text-green-400 px-2 py-0.5 rounded-full hover:bg-green-800 transition-colors"
                         >
-                          Logged {expandedLog === day.id ? 'â–²' : 'â–¼'}
+                          Logged {expandedLog === day.id ? '▲' : '▼'}
                         </button>
                       )}
                     </div>
@@ -292,7 +292,7 @@ export default function Dashboard() {
                                 className="text-zinc-600 hover:text-zinc-300 transition-colors text-xs leading-none"
                                 title="View description"
                               >
-                                â“˜
+                                ⓘ
                               </button>
                             )}
                           </div>
@@ -303,7 +303,7 @@ export default function Dashboard() {
                           )}
                           {ex.movements.length > 0 && (
                             <span className="text-zinc-600 text-xs ml-0">
-                              {ex.movements.map(m => m.name).join(' â†’ ')}
+                              {ex.movements.map(m => m.name).join(' → ')}
                             </span>
                           )}
                         </div>
