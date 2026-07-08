@@ -18,9 +18,20 @@ const METRICS = [
   { label: 'Total volume', value: 'volume' },
 ]
 
+function getYTicks(data, unit) {
+  if (!data || data.length === 0) return []
+  const max = Math.max(...data.map(d => d.value || 0))
+  const step = unit === 'kg' ? 2.5 : 5
+  const ceil = Math.ceil(max / step) * step
+  const ticks = []
+  for (let v = 0; v <= ceil; v += step) ticks.push(v)
+  return ticks
+}
+
 export default function Progress() {
   const router = useRouter()
   const [user, setUser] = useState(null)
+  const [unit, setUnit] = useState('lbs')
   const [exercises, setExercises] = useState([])
   const [selectedExercise, setSelectedExercise] = useState(null)
   const [timeRange, setTimeRange] = useState(3)
@@ -34,6 +45,7 @@ export default function Progress() {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) { router.push('/login'); return }
       setUser(session.user)
+      setUnit(localStorage.getItem('kraft_unit') || 'lbs')
 
       // Get all workout logs for this user
       const { data: logs } = await supabase
@@ -229,7 +241,7 @@ export default function Progress() {
                   <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" />
                     <XAxis dataKey="date" tick={{ fill: '#71717a', fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: '#71717a', fontSize: 12 }} axisLine={false} tickLine={false} width={40} />
+                    <YAxis ticks={getYTicks(chartData, unit)} tick={{ fill: '#71717a', fontSize: 12 }} axisLine={false} tickLine={false} width={40} />
                     <Tooltip
                       contentStyle={{ backgroundColor: '#27272a', border: '1px solid #3f3f46', borderRadius: '8px', fontSize: '13px' }}
                       labelStyle={{ color: '#a1a1aa' }}

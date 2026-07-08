@@ -38,6 +38,7 @@ function LogWorkout() {
   const [showSplits, setShowSplits] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [unit, setUnit] = useState('lbs')
 
   useEffect(() => {
     async function load() {
@@ -86,11 +87,20 @@ function LogWorkout() {
       })
       setSets(initialSets)
 
+      const savedUnit = localStorage.getItem('kraft_unit') || 'lbs'
+      setUnit(savedUnit)
+
       setLoading(false)
     }
 
     load()
   }, [dayId])
+
+  function toggleUnit() {
+    const next = unit === 'lbs' ? 'kg' : 'lbs'
+    setUnit(next)
+    localStorage.setItem('kraft_unit', next)
+  }
 
   // Add a set to an exercise
   function addSet(exId) {
@@ -302,7 +312,15 @@ function LogWorkout() {
         {/* Lift section */}
         {includesLift && exercises.length > 0 && (
           <div className="flex flex-col gap-4">
-            <h2 className="font-medium">Exercises</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="font-medium">Exercises</h2>
+              <button
+                onClick={toggleUnit}
+                className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors"
+              >
+                {unit === 'lbs' ? 'Switch to kg' : 'Switch to lbs'}
+              </button>
+            </div>
 
             {exercises.map(ex => (
               <div key={ex.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
@@ -318,42 +336,44 @@ function LogWorkout() {
                 </div>
 
                 {/* Set rows */}
-                <div className="grid grid-cols-4 gap-2 mb-2 text-xs text-zinc-600 px-1">
+                <div className="grid grid-cols-[28px_1fr_1fr_20px] gap-2 mb-2 text-xs text-zinc-600 px-1">
                   <span>Set</span>
                   <span>{ex.is_hold ? 'Duration' : 'Reps'}</span>
-                  <span>Weight</span>
-                  <span>Notes</span>
+                  <span>Weight ({unit})</span>
+                  <span></span>
                 </div>
 
                 {(sets[ex.id] || []).map((s, i) => (
-                  <div key={i} className="grid grid-cols-4 gap-2 mb-2 items-center">
-                    <span className="text-xs text-zinc-600 px-1">{i + 1}</span>
-                    <input
-                      type="text"
-                      placeholder={ex.is_hold ? '60 sec' : '—'}
-                      value={s.reps}
-                      onChange={e => updateSet(ex.id, i, 'reps', e.target.value)}
-                      className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none"
-                    />
-                    <input
-                      type="text"
-                      placeholder="kg / lbs"
-                      value={s.weight}
-                      onChange={e => updateSet(ex.id, i, 'weight', e.target.value)}
-                      className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none"
-                    />
-                    <div className="flex items-center gap-2">
+                  <div key={i} className="mb-2">
+                    <div className="grid grid-cols-[28px_1fr_1fr_20px] gap-2 items-center">
+                      <span className="text-xs text-zinc-600 px-1">{i + 1}</span>
                       <input
-                        type="text"
-                        placeholder=""
-                        value={s.notes}
-                        onChange={e => updateSet(ex.id, i, 'notes', e.target.value)}
-                        className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none"
+                        type="number"
+                        inputMode="numeric"
+                        placeholder={ex.is_hold ? 'sec' : '—'}
+                        value={s.reps}
+                        onChange={e => updateSet(ex.id, i, 'reps', e.target.value)}
+                        className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none w-full"
                       />
-                      {(sets[ex.id] || []).length > 1 && (
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={s.weight}
+                        onChange={e => updateSet(ex.id, i, 'weight', e.target.value)}
+                        className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-sm outline-none w-full"
+                      />
+                      {(sets[ex.id] || []).length > 1 ? (
                         <button onClick={() => removeSet(ex.id, i)} className="text-zinc-600 hover:text-red-400 text-xs">✕</button>
-                      )}
+                      ) : <span />}
                     </div>
+                    <input
+                      type="text"
+                      placeholder="Notes (optional)"
+                      value={s.notes}
+                      onChange={e => updateSet(ex.id, i, 'notes', e.target.value)}
+                      className="mt-1.5 w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-1.5 text-xs text-zinc-300 placeholder-zinc-600 outline-none"
+                    />
                   </div>
                 ))}
 
