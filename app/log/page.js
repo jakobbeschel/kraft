@@ -21,6 +21,7 @@ function LogWorkout() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const dayId = searchParams.get('dayId')
+  const editLogId = searchParams.get('logId')
 
   const [user, setUser] = useState(null)
   const [day, setDay] = useState(null)
@@ -42,14 +43,12 @@ function LogWorkout() {
 
   useEffect(() => {
     async function load() {
-      // Check user is logged in
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) { router.push('/login'); return }
       setUser(session.user)
 
       if (!dayId) { router.push('/dashboard'); return }
 
-      // Load the day details
       const { data: dayData } = await supabase
         .from('program_days')
         .select('id, day_name, day_type')
@@ -59,14 +58,12 @@ function LogWorkout() {
       if (!dayData) { router.push('/dashboard'); return }
       setDay(dayData)
 
-      // Load exercises for this day
       const { data: exData } = await supabase
         .from('exercises')
         .select('id, name, is_complex, is_hold, order_index')
         .eq('program_day_id', dayId)
         .order('order_index')
 
-      // Load movements for each exercise
       const exWithMovements = await Promise.all(
         (exData || []).map(async (ex) => {
           const { data: movements } = await supabase
@@ -80,21 +77,52 @@ function LogWorkout() {
 
       setExercises(exWithMovements)
 
-      // Set up one empty set per exercise to start with
-      const initialSets = {}
-      exWithMovements.forEach(ex => {
-        initialSets[ex.id] = [{ reps: '', weight: '', notes: '' }]
-      })
-      setSets(initialSets)
+      // If editing an existing log, pre-fill with saved data
+      if (editLogId) {
+        const [{ data: existingSets }, { data: existingRun }] = await Promise.all([
+          supabase.from('logged_sets')
+            .select('exercise_id, set_number, reps, weight, notes')
+            .eq('workout_log_id', editLogId)
+            .order('exercise_id').order('set_number'),
+          supabase.from('logged_runs')
+            .select('run_type, duration, distance, pace, incline, notes')
+            .eq('workout_log_id', editLogId)
+            .single(),
+        ])
 
-      const savedUnit = localStorage.getItem('kraft_unit') || 'lbs'
-      setUnit(savedUnit)
+        const prefilled = {}
+        exWithMovements.forEach(ex => {
+          const exSets = (existingSets || []).filter(s => s.exercise_id === ex.id)
+          prefilled[ex.id] = exSets.length > 0
+            ? exSets.map(s => ({ reps: s.reps || '', weight: s.weight || '', notes: s.notes || '' }))
+            : [{ reps: '', weight: '', notes: '' }]
+        })
+        setSets(prefilled)
 
+        if (existingRun) {
+          setRun({
+            run_type: existingRun.run_type || 'Easy',
+            duration: existingRun.duration || '',
+            distance: existingRun.distance || '',
+            pace: existingRun.pace || '',
+            incline: existingRun.incline || '',
+            notes: existingRun.notes || '',
+          })
+        }
+      } else {
+        const initialSets = {}
+        exWithMovements.forEach(ex => {
+          initialSets[ex.id] = [{ reps: '', weight: '', notes: '' }]
+        })
+        setSets(initialSets)
+      }
+
+      setUnit(localStorage.getItem('kraft_unit') || 'lbs')
       setLoading(false)
     }
 
     load()
-  }, [dayId])
+  }, [dayId, editLogId])
 
   function toggleUnit() {
     const next = unit === 'lbs' ? 'kg' : 'lbs'
@@ -150,28 +178,35 @@ function LogWorkout() {
     ))
   }
 
-  // Save the logged workout to the database
   async function saveWorkout() {
     setSaving(true)
 
     try {
-      // Create the workout log entry for today
-      const { data: log, error: logError } = await supabase
-        .from('workout_logs')
-        .insert({
-          user_id: user.id,
-          program_day_id: dayId,
-          logged_date: new Date().toISOString().split('T')[0],
-        })
-        .select()
-        .single()
+      let logId
 
-      if (logError) throw logError
+      if (editLogId) {
+        // Editing: wipe existing sets/runs and rewrite
+        logId = editLogId
+        await supabase.from('logged_sets').delete().eq('workout_log_id', logId)
+        await supabase.from('logged_runs').delete().eq('workout_log_id', logId)
+      } else {
+        // New log entry
+        const { data: log, error: logError } = await supabase
+          .from('workout_logs')
+          .insert({
+            user_id: user.id,
+            program_day_id: dayId,
+            logged_date: new Date().toISOString().split('T')[0],
+          })
+          .select()
+          .single()
+        if (logError) throw logError
+        logId = log.id
+      }
 
-      // Save run data if this day includes a run
       if (day.day_type !== 'lift') {
         await supabase.from('logged_runs').insert({
-          workout_log_id: log.id,
+          workout_log_id: logId,
           run_type: run.run_type,
           duration: run.duration,
           distance: run.distance,
@@ -181,14 +216,13 @@ function LogWorkout() {
         })
       }
 
-      // Save each set for each exercise
       for (const ex of exercises) {
         const exSets = sets[ex.id] || []
         for (let i = 0; i < exSets.length; i++) {
           const s = exSets[i]
-          if (!s.reps && !s.weight) continue // skip empty sets
+          if (!s.reps && !s.weight) continue
           await supabase.from('logged_sets').insert({
-            workout_log_id: log.id,
+            workout_log_id: logId,
             exercise_id: ex.id,
             set_number: i + 1,
             reps: s.reps,
@@ -214,7 +248,7 @@ function LogWorkout() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
 
-      <Nav current="Log workout" />
+      <Nav current={editLogId ? 'Edit log' : 'Log workout'} />
 
       <div className="max-w-3xl mx-auto px-8 py-12">
         <h1 className="text-2xl font-semibold mb-1">{day.day_name}</h1>
@@ -395,7 +429,7 @@ function LogWorkout() {
           disabled={saving}
           className="w-full mt-8 bg-white text-zinc-950 rounded-xl py-3 font-medium hover:bg-zinc-200 transition-colors disabled:opacity-50"
         >
-          {saving ? 'Saving...' : 'Save workout'}
+          {saving ? 'Saving...' : editLogId ? 'Update workout' : 'Save workout'}
         </button>
 
       </div>

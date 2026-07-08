@@ -356,18 +356,33 @@ export default function Dashboard() {
 
                   {day.day_type !== 'rest' && (
                     <div className="flex items-center gap-3 mt-4">
-                      <button
-                        onClick={() => router.push(`/log?dayId=${day.id}`)}
-                        className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
-                      >
-                        {isLogged(day.id) ? 'Log again' : 'Log workout'}
-                      </button>
-                      {isLogged(day.id) && (
+                      {isLogged(day.id) ? (
+                        <>
+                          <button
+                            onClick={() => router.push(`/log?dayId=${day.id}&logId=${getLogId(day.id)}`)}
+                            className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
+                          >
+                            Edit log
+                          </button>
+                          <button
+                            onClick={() => router.push(`/log?dayId=${day.id}`)}
+                            className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
+                          >
+                            Log again
+                          </button>
+                          <button
+                            onClick={() => deleteLog(day.id)}
+                            className="text-xs text-red-800 hover:text-red-400 transition-colors"
+                          >
+                            Delete log
+                          </button>
+                        </>
+                      ) : (
                         <button
-                          onClick={() => deleteLog(day.id)}
-                          className="text-xs text-red-800 hover:text-red-400 transition-colors"
+                          onClick={() => router.push(`/log?dayId=${day.id}`)}
+                          className="text-xs text-zinc-500 border border-zinc-700 rounded-lg px-4 py-2 hover:text-white hover:border-zinc-500 transition-colors"
                         >
-                          Delete log
+                          Log workout
                         </button>
                       )}
                     </div>
