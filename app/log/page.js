@@ -43,6 +43,8 @@ function LogWorkout() {
   const [loading, setLoading] = useState(true)
   const [unit, setUnit] = useState('lbs')
   const [distUnit, setDistUnit] = useState('mi')
+  const [previousLog, setPreviousLog] = useState(null)
+  const [showCopyPrompt, setShowCopyPrompt] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -119,6 +121,20 @@ function LogWorkout() {
           initialSets[ex.id] = [{ reps: '', weight: '', notes: '' }]
         })
         setSets(initialSets)
+
+        // Check for a previous log to offer copy
+        const { data: prevLogs } = await supabase
+          .from('workout_logs')
+          .select('id, logged_date')
+          .eq('program_day_id', dayId)
+          .eq('user_id', session.user.id)
+          .order('logged_date', { ascending: false })
+          .limit(1)
+
+        if (prevLogs && prevLogs.length > 0) {
+          setPreviousLog(prevLogs[0])
+          setShowCopyPrompt(true)
+        }
       }
 
       setUnit(localStorage.getItem('kraft_unit') || 'lbs')
@@ -128,6 +144,42 @@ function LogWorkout() {
 
     load()
   }, [dayId, editLogId])
+
+  async function copyLastSession() {
+    if (!previousLog) return
+    setShowCopyPrompt(false)
+
+    const [{ data: prevSets }, { data: prevRun }] = await Promise.all([
+      supabase.from('logged_sets')
+        .select('exercise_id, set_number, reps, weight, notes')
+        .eq('workout_log_id', previousLog.id)
+        .order('exercise_id').order('set_number'),
+      supabase.from('logged_runs')
+        .select('run_type, duration, distance, pace, incline, notes')
+        .eq('workout_log_id', previousLog.id)
+        .single(),
+    ])
+
+    const copied = {}
+    exercises.forEach(ex => {
+      const exSets = (prevSets || []).filter(s => s.exercise_id === ex.id)
+      copied[ex.id] = exSets.length > 0
+        ? exSets.map(s => ({ reps: s.reps || '', weight: s.weight || '', notes: s.notes || '' }))
+        : [{ reps: '', weight: '', notes: '' }]
+    })
+    setSets(copied)
+
+    if (prevRun) {
+      setRun({
+        run_type: prevRun.run_type || 'Easy',
+        duration: prevRun.duration || '',
+        distance: prevRun.distance || '',
+        pace: prevRun.pace || '',
+        incline: prevRun.incline || '',
+        notes: prevRun.notes || '',
+      })
+    }
+  }
 
   function toggleUnit() {
     const next = unit === 'lbs' ? 'kg' : 'lbs'
@@ -307,9 +359,35 @@ function LogWorkout() {
             </h1>
           )}
         </div>
-        <p className="text-zinc-400 text-sm mb-10">
+        <p className="text-zinc-400 text-sm mb-6">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
+
+        {/* Copy last session prompt */}
+        {showCopyPrompt && previousLog && (
+          <div className="flex items-center justify-between bg-zinc-900 border border-zinc-700 rounded-xl px-5 py-4 mb-6">
+            <div>
+              <p className="text-sm font-medium">Copy last session?</p>
+              <p className="text-xs text-zinc-400 mt-0.5">
+                From {new Date(previousLog.logged_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={copyLastSession}
+                className="text-xs bg-white text-zinc-900 font-medium px-4 py-2 rounded-lg hover:bg-zinc-200 transition-colors"
+              >
+                Yes, copy
+              </button>
+              <button
+                onClick={() => setShowCopyPrompt(false)}
+                className="text-xs text-zinc-400 border border-zinc-700 px-4 py-2 rounded-lg hover:text-white transition-colors"
+              >
+                Start fresh
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Run section */}
         {includesRun && (
